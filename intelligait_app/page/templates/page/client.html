@@ -1,0 +1,145 @@
+{% extends "page/base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row" id="content">
+        <div class="content-section col-md-4">
+            <h3 class="article-content"> {{ object.first_name }} {{ object.last_name }}</h3>
+            <small class="text-muted">Created: {{ object.creation_date }}</small><br>
+            <h5 class="article-content mt-3">Client Details</h5>
+            <small class="article-content">Number of Analyses: {{ object.num_analyses }}</small><br>
+            <small class="article-content">Number of Videos: {{ object.num_videos }}</small><br>
+            <small class="article-content">Notes: {{ object.notes }}</small><br>
+            <small class="text-muted">Last Updated: {{ object.last_updated }}</small><br><br>
+            <div>
+                <a class="btn btn-outline-dark btn-sm mt-1 mb-1" href="{% url 'update-client' object.id %}">Update</a>
+                <a class="btn btn-outline-dark btn-sm mt-1 mb-1" href="{% url 'delete-client' object.id %}">Delete</a>
+            </div>
+        </div>
+        <article class="content-section col-md-8">
+            <ul class="nav nav-tabs col-md-12">
+                <li class="nav-item">
+                    <!--<a class="nav-link active" href="{% url 'client-analysis' object.id %}">Analyses</a>-->
+                    <a class="nav-link table-link active" href="#analysis" role="tab" data-toggle="tab">Analyses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link table-link" href="#videos" role="tab" data-toggle="tab">Videos</a>
+                </li>
+            </ul>
+            <!--<a class="nav-link float-right" href="{% url 'upload-video' object.id %}"><button type="button" class="btn btn-secondary">Upload Video</button></a>-->
+            <!-- Button trigger modal -->
+                <button type="button" class="nav-link mt-1 mb-1 float-right btn btn-outline-dark" data-toggle="modal" data-target="#uploadModal">
+                Upload Video
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upload Video</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form enctype="multipart/form-data" method="POST" action="">
+                            <div class="modal-body">
+                                <div class="container">
+                                    
+                                        {% csrf_token %}
+                                        {{form.as_p}}
+                                        <input type="text" name="title" placeholder="Enter Video Title here"><br>
+                                        <input type="file" name="video" accept="video/*">
+                                    </form>
+                                </div>
+                            </div>
+                        </form> 
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                            <button type="submit" value="Upload" class="btn btn-light" href="{% url 'client' object.id %}">Upload</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            <div>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="analysis">
+                    <table id="dtBasicExample" class="table table-hover table-bordered table-light table-sm" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-6">Name</th>
+                                <th class="col-sm-6">Date Analysed</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <th><small><a class="table-link" href="{% url 'pdf-view' %}">Analysis 1</a></small></th>
+                            <th><small>26/07/2021</small></th>
+                        </tr>
+                        <tr>
+                            <th><small>Analysis 2</small></th>
+                            <th><small>26/07/2021</small></th>
+                        </tr>
+                        <tr>
+                            <th><small>Analysis 3</small></th>
+                            <th><small>26/07/2021</small></th>
+                        </tr>
+                        <tr>
+                            <th><small>Analysis 4</small></th>
+                            <th><small>26/07/2021</small></th>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div role="tabpanel" class="tab-pane" id="videos">
+                    <table id="dtBasicExample" class="table table-hover table-bordered table-light table-sm" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-4">Name</th>
+                                <th class="col-sm-4">Date Recorded</th>
+                                <th class="col-sm-4">Date Analysed</th>
+                            </tr>
+                        </thead>
+                        {% for video in all_video %}
+                            <tr>
+                                <td><small><a class="table-link" href="{% url 'client' client.id %}">{{ video.caption }}</a></small></td>
+                                <td><small><a class="table-link" href="{% url 'client' client.id %}">{{ video.url }}</a></small></td>
+                            </tr></a>
+                        {% endfor %}
+                        <tr>
+                            <th><small>Video 1</small></th>
+                            <th><small>26/07/2021</small></th>
+                            <th><small>26/07/2021</small></th>
+                        </tr>
+                        <tr>
+                            <th><small>Video 2</small></th>
+                            <th><small>26/07/2021</small></th>
+                            <th><small>26/07/2021</small></th>
+                        </tr>
+                        <tr>
+                            <th><small>Video 3</small></th>
+                            <th><small>26/07/2021</small></th>
+                            <th><small>26/07/2021</small></th>
+                        </tr>
+                        <tr>
+                            <th><small>Video 4</small></th>
+                            <th><small>26/07/2021</small></th>
+                            <th><small>26/07/2021</small></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="media-body">
+                <!--<div class="article-metadata">
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'client-analysis' object.id %}">View Analyses</a>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'client-videos' object.id %}">View Videos</a>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'upload-video' object.id %}">Upload Video</a>
+                    </div>
+                    {% if object.id == user.id %}-->
+                    
+                    <!--{% endif %}
+                </div>-->
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock content %}

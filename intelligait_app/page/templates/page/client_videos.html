@@ -1,0 +1,36 @@
+{% extends "page/base.html" %}
+{% block content %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Upload Videos</title>
+    </head>
+    <body>
+    <!--<form action="" method="POST">{% csrf_token %}
+    
+        <input type="text" name="title" placeholder="Enter Video Title here"><br>
+        <input type="file" name="video" accept="video/*">
+        <button type="submit"> Upload New Video </button>
+    
+    </form>
+    <h1>Video Uploader</h1>
+    <form enctype="multipart/form-data" method="POST" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Upload"/>
+    </form>-->
+        <!--<video class="video-fluid" controls width=400>
+            <source src="../../media/videos/Hemiplegic_Gait_FrontOn_pose_estimation.mp4"/>
+        </video>-->
+        <br><br>
+            {% for video in all %}
+                <h3 class="text_center mt-2 mb-2">{{video.caption}}</h3>
+                <video class="video-fluid" controls width=400>
+                    <source src="{{video.video.url}}" type="video/*">
+                </video>
+            {% endfor %}
+        <br><br>
+
+    </body>
+    {% endblock content %}
+</html>
