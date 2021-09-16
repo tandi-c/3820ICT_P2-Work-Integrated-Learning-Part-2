@@ -16,29 +16,41 @@ TITLES = (
 class Client(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    #title = models.CharField(max_length=4, choices=TITLES)
-    notes = models.CharField(max_length=1000)
+    # title = models.CharField(max_length=4, choices=TITLES)
+    dob = models.DateTimeField(default=timezone.now)
+    email = models.EmailField(blank=True, null=True)
+    phone_number = models.CharField(max_length=30, blank=True, null=True)
+    notes = models.CharField(max_length=1000, blank=True)
     num_analyses = models.IntegerField(default=0)
-    num_videos = models.IntegerField(default=0)
+    num_videos = models.IntegerField(default=0) 
+    videos = []
+    analyses = []
     last_updated = models.DateTimeField(auto_now=True)
     creation_date = models.DateTimeField(default=timezone.now)
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.FileField(default="profile_pics/default.jpg")
 
     def __str__(self):
-        return self.first_name
+        return str(self.first_name + " " + self.last_name)
 
     def get_absolute_url(self):
         return reverse('client', kwargs={'pk': self.pk})
 
 
 class Video(models.Model):
+    client_id = models.ForeignKey(Client, default=None, on_delete=models.CASCADE, blank=True)
     title = models.CharField(max_length=500)
     video = models.FileField(upload_to="videos/", default="Nothing")
-    print(title)
-    print(video)
+    date_uploaded = models.DateTimeField(default=timezone.now)
+    #print(title)
+    #print(video)
+
+    class Meta:
+        verbose_name = 'video'
+        verbose_name_plural = 'videos'
 
     def __str__(self):
-        return self.title + ": " + str(self.video.path)
+        return self.video.path
 
     def get_absolute_url(self):
         return reverse('client', kwargs={'pk': self.pk})
