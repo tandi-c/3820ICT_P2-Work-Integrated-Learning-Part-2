@@ -3,7 +3,7 @@ from django.conf.urls import url
 from .views import (
     ClientListView, ClientDetailView, ClientCreateView, 
     ClientUpdateView, ClientDeleteView, ClientAnalysisView, ClientUploadView, 
-    ClientVideosView
+    ClientVideosView, ClientVideoView
 )
 from . import views
 
@@ -16,5 +16,6 @@ urlpatterns = [
     path('client/<int:pk>/update', ClientUpdateView.as_view(), name='update-client'),
     path('client/<int:pk>/delete', ClientDeleteView.as_view(), name='delete-client'),
     path('client/<int:pk>/upload-video/', ClientUploadView.as_view(), name='upload-video'),
-    url(r'view-pdf/$', views.pdf_view, name='pdf-view'),
+    path('client/<int:pk>/video-modal/<int:video_pk>/', ClientVideoView.as_view(), name='video-modal'),
+    url(r'client/<int:pk>/view-pdf/$', views.pdf_view, name='pdf-view'),  
 ]
