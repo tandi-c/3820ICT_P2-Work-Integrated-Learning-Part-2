@@ -1,7 +1,7 @@
 import logging
 import time
 import DATA
-
+import math
 
 import cv2
 
@@ -18,9 +18,17 @@ logger.addHandler(ch)
 
 fps_time = 0
 keyFeatures = DATA.keyFeatures
+distances = []
+width = 0
+height = 0
 
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
+
+def resize(frame):
+    global width, height
+    resized = cv2.resize(frame, (width, height))
+    return resized
 
 def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     # initialize the dimensions of the image to be resized and
@@ -54,9 +62,31 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     # return the resized image
     return resized
 
+def draw_box(image, start_point, end_point):
+    cv2.rectangle(image, start_point, end_point, (255, 0, 0), 2) 
+    return image
+
+def fit_person(image, start_point, end_point):
+    if (start_point[1] < 0): 
+        y=0
+    else:
+        y=start_point[1]
+    if (start_point[0] < 0):
+        x=0
+    else:
+        x=start_point[0]
+    h=end_point[1]
+    w=end_point[0]
+    image = image[y:h, x:w]
+    try:
+        image = resize(image)
+    except Exception as e:
+        print(str(e))
+    return image
+
 
 def run(args):
-    global fps_time
+    global fps_time, distances, width, height
     logger.debug("initialization %s : %s" % (args.model, get_graph_path(args.model)))
     w, h = model_wh(args.resize)
     if w > 0 and h > 0:
@@ -75,10 +105,12 @@ def run(args):
     cam = cv2.VideoCapture(DATA.video_file)
     ret_val, image = cam.read()
     image = image_resize(image)
-    logger.info("cam image=%dx%d" % (image.shape[1], image.shape[0]))
+    width = image.shape[1]
+    height = image.shape[0]
+    logger.info("cam image=%dx%d" % (height, width))
 
     output_video = DATA.video_file[:-4] + "_pose_estimation.avi"
-    vid_writer = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc('M','J','P','G'), 10, (image.shape[1],image.shape[0]))
+    vid_writer = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc('M','J','P','G'), 10, (width,height))
     frameRate = 0
 
     while True:
@@ -89,7 +121,39 @@ def run(args):
         frameRate += 1
         if frameRate % 3 != 0:
             print(frameRate)
-            image = image_resize(image)
+            # image = image_resize(image)
+            image = resize(image)
+
+            humans = e.inference(
+                image,
+                resize_to_default=(w > 0 and h > 0),
+                upsample_size=args.resize_out_ratio,
+            )
+
+            human = humans[0]
+
+            a = human.body_parts[1]
+            x = a.x*image.shape[1]
+            y = a.y*image.shape[0]
+            chest = (int(x), int(y))
+
+            a = human.body_parts[8]
+            x = a.x*image.shape[1]
+            y = a.y*image.shape[0]
+            hip = (int(x), int(y))
+
+            distance = int(math.sqrt( ((int(chest[0])-int(hip[0]))**2)+((int(chest[1])-int(hip[1]))**2) ))
+            distances.append(distance);
+            if (len(distances) > 15):
+                distances.pop(0)
+            normDist = int(sum(distances) / len(distances))
+            DATA.pointsDict["Distance"].append(normDist)
+
+            start_point = (int(chest[0] - 1.5*(normDist)), int(chest[1] - 1.5*(normDist))) 
+            end_point = (int(hip[0] + 1.5*(normDist)), int(hip[1] + 2.5*(normDist))) 
+
+            # image = draw_box(image, start_point, end_point)
+            image = fit_person(image, start_point, end_point)
 
             humans = e.inference(
                 image,
@@ -98,7 +162,7 @@ def run(args):
             )
 
             image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
-
+            
             human = humans[0]
             for i in range(14):
                 try: 

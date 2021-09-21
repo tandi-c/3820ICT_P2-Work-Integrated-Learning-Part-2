@@ -25,5 +25,6 @@ def resetDict():
         "R_Knee": [(0,0)],
         "L_Ankle": [(0,0)],
         "R_Ankle": [(0,0)],
+        "Distance": [0]
     }
     return 
