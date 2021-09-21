@@ -151,6 +151,8 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
         'clients': Client.objects.all()
     }
 
+    # Video upload 
+    # Saves video to client model instance
     def post(self, request, pk):
         form = VideoForm(request.POST, request.FILES)
         
@@ -162,7 +164,6 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
             print(client_id, title, video)
             client.num_analyses += 1
             client.num_videos += 1
-            #content = Video(title=title, video=video, client_id=client)
             client.save()
             form.save()
             context = {
