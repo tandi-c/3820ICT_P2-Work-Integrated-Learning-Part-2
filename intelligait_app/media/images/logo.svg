@@ -1,0 +1,21 @@
+<!-- Company Logo -->
+<svg id="Component_84_1" data-name="Component 84 – 1" xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72">
+    <g id="Ellipse_105" data-name="Ellipse 105" fill="none" stroke="#4b5155" stroke-width="5.5">
+        <circle cx="36" cy="36" r="36" stroke="none"/>
+        <circle cx="36" cy="36" r="33.25" fill="none"/>
+    </g>
+    <g id="Ellipse_106" data-name="Ellipse 106" transform="translate(14 5)" fill="none" stroke="#4b5155" stroke-width="5.5">
+        <circle cx="15.5" cy="15.5" r="15.5" stroke="none"/>
+        <circle cx="15.5" cy="15.5" r="12.75" fill="none"/>
+    </g>
+    <g id="Ellipse_107" data-name="Ellipse 107" transform="translate(10 30)" fill="none" stroke="#4b5155" stroke-width="5.5">
+        <circle cx="17" cy="17" r="17" stroke="none"/>
+        <circle cx="17" cy="17" r="14.25" fill="none"/>
+    </g>
+    <g id="Rectangle_34" data-name="Rectangle 34" transform="translate(34.5 25.099) rotate(-90)" fill="none" stroke="#4b5155" stroke-width="6">
+        <rect width="6" height="16" stroke="none"/>
+        <rect x="3" y="3" height="10" fill="none"/>
+    </g>
+    <path id="Path_85" data-name="Path 85" d="M10.226,0s-7.4,12.646-9.077,18.192c-2.808,9.29.414,20.113.414,20.113" transform="matrix(0.848, -0.53, 0.53, 0.848, 39.032, 24.518)" fill="none" stroke="#4b5155" stroke-width="6"/>
+    <path id="Path_86" data-name="Path 86" d="M9.177,0S2.139,8.8.909,13.122c-2.061,7.243.025,15.849.025,15.849" transform="matrix(-0.995, -0.105, 0.105, -0.995, 32.827, 55.234)" fill="none" stroke="#4b5155" stroke-width="7"/>
+</svg>

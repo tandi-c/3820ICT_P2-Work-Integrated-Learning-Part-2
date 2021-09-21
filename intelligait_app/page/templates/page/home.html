@@ -1,50 +1,67 @@
 {% extends "page/base.html" %}
 {% block content %}
-    <div class="content-section">
-        <table id="dtBasicExample" class="table table-hover table-light" cellspacing="0" width="100%">
-            {% if user.is_staff and user.is_authenticated %}
-                <!--<tr>
-                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search...">
-                </tr>-->
-                <div class="d-flex justify-content-between">
-                    <div class="container-fluid">
-                        <form class="d-flex">
-                            <input type="search" class="form-control-sm rounded" placeholder="Search..." aria-label="Search">
-                            <button type="submit" class="btn btn-light btn-sm"><i class="bi bi-search"></i></button>
-                        </form>
-                    </div>
-                    <a class="mb-2" href="{% url 'create-client' %}"><button type="button" class="btn btn-secondary">New Client</button></a>
-                    <div class="clearfix"></div>
-                </div>
-                <div>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Analyses</th>
-                            <th>Videos</th>
-                            <th>Last Updated</th>
-                            <th>Creation Date</th>
-                        </tr>
-                    </thead>
-                    {% for client in clients %}
-                        <tr>
-                            <td><a class="table-link" href="{% url 'client' client.id %}">{{ client.first_name }} {{ client.last_name }}</a></td>
-                            <td><small>{{ client.num_analyses }}</small></td>
-                            <td><small>{{ client.num_videos }}</small></td>
-                            <td><small>{{ client.last_updated }}</small></td>
-                            <td><small>{{ client.creation_date}}</small></td>
-                            <td><a class="btn btn-light btn-sm" href="{% url 'update-client' client.id %}"><i class="bi bi-pencil-square"></i></a></td>
-                        </tr></a>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            {% if user.is_authenticated %}
-                <div class="container">
-                    <div class="row" id="content">
 
-                    </div>
+<div class="content-section home-style custom-background">
+    <table id="dtBasicExample" class="table table-hover table-light m-0" cellspacing="0" width="100%">
+        {% if user.is_staff and user.is_authenticated %}
+            <nav class="custom-navigation-bar navbar navbar-inverse p-0">
+                <div class="container p-0" style="flex-wrap: nowrap;">
+                    
+                    <form class="navbar-form navbar-left p-0 m-0" method="POST">
+                        <div class="input-group flex-shrink-1">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <!-- Search Input-->
+                                <input type="search" class="custom-input-input" placeholder="Search" name="search"> 
+                                <!-- Search Button -->
+                                <button type="submit" class="btn custom-input-btn"><img src="/media/images/search_icon.svg"></button>
+                            </form>
+                        </div>
+                    </form>
+                    
+
+                    <!-- Button trigger modal -->
+                    <a href="{% url 'create-client'%}">
+                        <button type="button" class="btn btn_custom_blue nav-link float-right">New Client</button>
+                    </a>
                 </div>
-            {% endif %}
+            </nav>
+            
+            <div>
+                <thead>
+                    <tr class="tab-style">
+                        <th>Name</th>
+                        <th class="text-center">Analyses</th>
+                        <th class="text-center">Videos</th>
+                        <th class="text-center">Last Updated</th>
+                        <th class="text-center">Creation Date</th>
+                    </tr>
+                </thead>
+                {% if clients|length == 0 %}
+                    <tr>
+                        <td colspan="5" class="text-center">No clients to display. Create a new client to begin video analysis.</td>
+                    </tr>
+                {% else %}
+                    {% for client in clients %}
+                    <tr class="listed-client-style" data-href="{% url 'client' client.id %}">
+                        <td class="table-link"><small>{{ client.first_name }} {{ client.last_name }}</small></td>
+                        <td class="text-center"><small>{{ client.num_analyses }}</small></td>
+                        <td class="text-center"><small>{{ client.num_videos }}</small></td>
+                        <td class="text-center"><small>{{ client.last_updated }}</small></td>
+                        <td class="text-center"><small>{{ client.creation_date}}</small></td>
+                        <td><a class="btn btn-light btn-sm" href="{% url 'update-client' client.id %}"><i class="bi bi-pencil-square"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endif %}
+    {% if not user.is_staff and user.is_authenticated %}
+    <div class="container">
+        <div class="row" id="content">
+            You must be a staff member to view this page.
+        </div>
+    </div>
+    {% endif %}
         </table>
     </div>
 {% endblock content %}
