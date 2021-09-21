@@ -16,6 +16,14 @@ formatter = logging.Formatter("[%(asctime)s] [%(name)s] [%(levelname)s] %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+args = {
+    "resize": "0x0",
+    "resize_out_ratio": 4.0,
+    "model": "mobilenet_thin",
+    "show_process": False,
+    "tensorrt": "False",
+}
+
 fps_time = 0
 keyFeatures = DATA.keyFeatures
 distances = []
@@ -85,24 +93,27 @@ def fit_person(image, start_point, end_point):
     return image
 
 
-def run(args):
-    global fps_time, distances, width, height
-    logger.debug("initialization %s : %s" % (args.model, get_graph_path(args.model)))
-    w, h = model_wh(args.resize)
+def run(video_file = None):
+    global args, fps_time, distances, width, height
+    logger.debug("initialization %s : %s" % (args["model"], get_graph_path(args["model"])))
+    w, h = model_wh(args["resize"])
     if w > 0 and h > 0:
         e = TfPoseEstimator(
-            get_graph_path(args.model),
+            get_graph_path(args["model"]),
             target_size=(w, h),
-            trt_bool=str2bool(args.tensorrt),
+            trt_bool=str2bool(args["tensorrt"]),
         )
     else:
         e = TfPoseEstimator(
-            get_graph_path(args.model),
+            get_graph_path(args["model"]),
             target_size=(432, 368),
-            trt_bool=str2bool(args.tensorrt),
+            trt_bool=str2bool(args["tensorrt"]),
         )
     logger.debug("cam read+")
-    cam = cv2.VideoCapture(DATA.video_file)
+    if (video_file != None):
+        cam = cv2.VideoCapture(video_file)
+    else:
+        cam = cv2.VideoCapture(DATA.video_file)
     ret_val, image = cam.read()
     image = image_resize(image)
     width = image.shape[1]
@@ -127,7 +138,7 @@ def run(args):
             humans = e.inference(
                 image,
                 resize_to_default=(w > 0 and h > 0),
-                upsample_size=args.resize_out_ratio,
+                upsample_size=args["resize_out_ratio"],
             )
 
             human = humans[0]
@@ -158,7 +169,7 @@ def run(args):
             humans = e.inference(
                 image,
                 resize_to_default=(w > 0 and h > 0),
-                upsample_size=args.resize_out_ratio,
+                upsample_size=args["resize_out_ratio"],
             )
 
             image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
