@@ -2,6 +2,7 @@ import argparse
 import sys
 import DATA
 import pose_estimation
+import gait_analysis
 
 def main(params):
     parser = argparse.ArgumentParser(description="tf-pose-estimation realtime webcam")
@@ -42,7 +43,8 @@ def main(params):
 
     DATA.resetDict()
 
-    pose_estimation.run(args)
+    pointsDict = pose_estimation.run(args)
+    gait_analysis.gaitAnalysis(pointsDict)
     return
 
 

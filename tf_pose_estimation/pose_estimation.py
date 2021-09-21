@@ -2,6 +2,7 @@ import logging
 import time
 import DATA
 
+
 import cv2
 
 from tf_pose.estimator import TfPoseEstimator
@@ -128,4 +129,4 @@ def run(args):
     vid_writer.release()
     cv2.destroyAllWindows()
     print(DATA.pointsDict)
-    return
+    return DATA.pointsDict
