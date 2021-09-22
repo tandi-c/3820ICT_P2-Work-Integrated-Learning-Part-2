@@ -206,7 +206,6 @@ def run(video_file = None):
                 break
     vid_writer.release()
     cv2.destroyAllWindows()
-    print(tf_pose_estimation.DATA.pointsDict)
+    #print(tf_pose_estimation.DATA.pointsDict)
 
-    #gait_analysis.gaitAnalysis(tf_pose_estimation.DATA.pointsDict)
     return tf_pose_estimation.DATA.pointsDict

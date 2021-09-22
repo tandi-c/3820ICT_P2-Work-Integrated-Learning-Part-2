@@ -81,16 +81,14 @@ def outputToPDF(keyword, dictionary, outputFile):       # high level function to
 
 
 def gaitAnalysis(dictionary, video_title):
-
-    #video_title = ClientUploadView().request.FILES.get(title)
-    print(video_title)
     pdf_path = os.path.abspath(os.path.join('media/analyses/' + video_title + '.pdf')) 
-    print(pdf_path)
-    outputPDF = pdf(pdf_path)        # might need to change file path !!!!!!
+    outputPDF = pdf(pdf_path) 
+    
     outputToPDF('Hip', dictionary, outputPDF)
     outputToPDF('Knee', dictionary, outputPDF)
     outputToPDF('Ankle', dictionary, outputPDF)
 
     outputPDF.close()
     #os.system(pdf_path)
+
     return pdf_path

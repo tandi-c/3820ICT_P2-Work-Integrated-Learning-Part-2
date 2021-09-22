@@ -493,3 +493,10 @@ html, body {
 div.d-flex.align-items-end.flex-column.custom-background.clientinfo-style.p-2 {
     width: 350px;
 }
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 0%;
+  }

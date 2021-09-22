@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponseNotFound, FileResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -142,16 +142,6 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
         return False
 
 
-class ClientAnalysisView(LoginRequiredMixin, DetailView):
-    model = Client
-    template_name = 'page/client_analysis.html'
-
-
-class ClientVideosView(LoginRequiredMixin, DetailView):
-    model = Client
-    template_name = 'page/client_videos.html'
-
-
 class ClientUploadView(LoginRequiredMixin, DetailView):
     model = Client
     template_name = 'page/upload_video.html'
@@ -175,7 +165,6 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
             client.save()
             form.save()
             video_path = str(Video.objects.filter(title=title).last())
-            #print(video_path)
 
             # This is what runs the pose estimation and analysis module 
             pdf_path = main.main(video_path, title) 
@@ -183,7 +172,6 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
             video.analysis = pdf_path
             video.analysis_title = title + ".pdf"
             video.save(force_update=True)
-            print(video.analysis)
 
             context = {
                 'client': Client.objects.get(pk=pk), 
@@ -201,14 +189,14 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
         return HttpResponseRedirect(reverse('client', kwargs={'pk': pk}), context)
 
 
-def display(request):
 
-    videos = Video.objects.all()
+class VideoDeleteView(LoginRequiredMixin, DeleteView):
     context = {
-        'videos': videos,
+        'clients': Client.objects.all()
     }
-                
-    return render(request, 'client.html', context)
+    model = Video
+    success_url = reverse_lazy('client', context)
+    template_name = 'delete_video.html'
 
 
 def pdf_view(request, *args, **kwargs):

@@ -38,7 +38,7 @@
         <!-- Navigation Bar (tabs) -->
         <nav class="">
             <div class="nav" id="nav-tab" role="tablist">
-                <a class="nav-item pl-5 pr-5 custom-nav-item active" id="nav-anayses-tab" data-toggle="tab" href="#analyses" role="tab" aria-controls="analyses" aria-selected="true">Analyses</a>
+                <a class="nav-item pl-5 pr-5 custom-nav-item active" id="nav-anayses-tab" data-toggle="tab" href="#analyses" role="tab" aria-controls="analyses" aria-selected="true">Videos</a>
                 <!-- <a class="nav-item pl-5 pr-5 custom-nav-item" id="nav-videos-tab" data-toggle="tab" href="#videos" role="tab" aria-controls="videos" aria-selected="true">Videos</a> -->
             </div>
         </nav>
@@ -79,11 +79,12 @@
                                 <th class="col-sm-5">Name</th>
                                 <th class="col-sm-4">Analysis</th>
                                 <th class="col-sm-3">Date Analysed</th>
+                                <th></th>
                             </tr>
                         </thead>
                         {% if videos|length == 0 %}
                             <tr>
-                                <td colspan="3" class="text-center">No analyses to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
+                                <td colspan="4" class="text-center">No analyses to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
                             </tr>
                         {% else %}
                             {% for video in videos %}
@@ -91,6 +92,7 @@
                                     <th data-href="{% url 'video-modal' client.id video.id %}"><small>{{ video.title }}</small></th>
                                     <th data-href="{% url 'pdf-view' client.id video.analysis_title %}"><small>{{ video.analysis_title }}</small></th>
                                     <th><small>{{ video.date_uploaded }}</small></th>
+                                    <td><a class="btn btn-light btn-sm" href="{% url 'delete-video' client.id video.id %}"><i class="bi bi-pencil-square"></i></a></td>
                                 </tr>
                             {% endfor %}
                         {% endif %}
