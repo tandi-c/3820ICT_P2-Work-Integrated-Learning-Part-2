@@ -76,20 +76,20 @@
                     <div>
                         <thead>
                             <tr>
-                                <th class="col-sm-6">Name</th>
+                                <th class="col-sm-5">Name</th>
                                 <th class="col-sm-4">Analysis</th>
-                                <th class="col-sm-6">Date Analysed</th>
+                                <th class="col-sm-3">Date Analysed</th>
                             </tr>
                         </thead>
                         {% if videos|length == 0 %}
                             <tr>
-                                <td colspan="2" class="text-center">No analyses to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
+                                <td colspan="3" class="text-center">No analyses to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
                             </tr>
                         {% else %}
                             {% for video in videos %}
                                 <tr class="listed-client-style">
                                     <th data-href="{% url 'video-modal' client.id video.id %}"><small>{{ video.title }}</small></th>
-                                    <th data-href="{% url 'pdf-view' %}"><small>Analysis.pdf</small></th>
+                                    <th data-href="{% url 'pdf-view' client.id video.analysis_title %}"><small>{{ video.analysis_title }}</small></th>
                                     <th><small>{{ video.date_uploaded }}</small></th>
                                 </tr>
                             {% endfor %}
@@ -98,7 +98,7 @@
                 </table>
             </div>
             
-            <!-- Signup. -->
+            {% comment %} <!-- Signup. -->
             <div class="tab-pane" id="videos" role="tabpanel" aria-labelledby="nav-videos-tab">
                 <table id="dtBasicExample" class="table table-hover table-light" cellspacing="0" width="100%">
                     <!-- Table Navigation Bar -->
@@ -145,7 +145,7 @@
                         {% endif %}
                     </div>
                 </table>
-            </div>
+            </div> {% endcomment %}
         </div>
     </article>
 </div>

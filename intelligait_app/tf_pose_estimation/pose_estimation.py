@@ -7,6 +7,7 @@ import cv2
 
 from tf_pose_estimation.tf_pose.estimator import TfPoseEstimator
 from tf_pose_estimation.tf_pose.networks import get_graph_path, model_wh
+import tf_pose_estimation.gait_analysis 
 
 logger = logging.getLogger("TfPoseEstimator-WebCam")
 logger.setLevel(logging.DEBUG)
@@ -113,7 +114,7 @@ def run(video_file = None):
     if (video_file != None):
         cam = cv2.VideoCapture(video_file)
     else:
-        cam = cv2.VideoCapture(DATA.video_file)
+        cam = cv2.VideoCapture(tf_pose_estimation.DATA.video_file)
     ret_val, image = cam.read()
     image = image_resize(image)
     width = image.shape[1]
@@ -206,4 +207,6 @@ def run(video_file = None):
     vid_writer.release()
     cv2.destroyAllWindows()
     print(tf_pose_estimation.DATA.pointsDict)
+
+    #gait_analysis.gaitAnalysis(tf_pose_estimation.DATA.pointsDict)
     return tf_pose_estimation.DATA.pointsDict

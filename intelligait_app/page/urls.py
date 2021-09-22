@@ -17,5 +17,5 @@ urlpatterns = [
     path('client/<int:pk>/delete', ClientDeleteView.as_view(), name='delete-client'),
     path('client/<int:pk>/upload-video/', ClientUploadView.as_view(), name='upload-video'),
     path('client/<int:pk>/video-modal/<int:video_pk>/', ClientVideoView.as_view(), name='video-modal'),
-    url(r'client/<int:pk>/view-pdf/$', views.pdf_view, name='pdf-view'),  
+    path('client/<int:pk>/view-pdf/<str:path>/', views.pdf_view, name='pdf-view'),  
 ]

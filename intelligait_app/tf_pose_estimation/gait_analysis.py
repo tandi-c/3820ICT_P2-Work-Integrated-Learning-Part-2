@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages as pdf
 import statistics
 import os
+import page.views
 
 
 def readOutput():  # remove when we connect to pose estimation
@@ -79,11 +80,17 @@ def outputToPDF(keyword, dictionary, outputFile):       # high level function to
     generateGraphs(leftData, rightData, outputFile, keyword)
 
 
-def gaitAnalysis(dictionary):
-    outputPDF = pdf('test1.pdf')        # might need to change file path !!!!!!
+def gaitAnalysis(dictionary, video_title):
+
+    #video_title = ClientUploadView().request.FILES.get(title)
+    print(video_title)
+    pdf_path = os.path.abspath(os.path.join('media/analyses/' + video_title + '.pdf')) 
+    print(pdf_path)
+    outputPDF = pdf(pdf_path)        # might need to change file path !!!!!!
     outputToPDF('Hip', dictionary, outputPDF)
     outputToPDF('Knee', dictionary, outputPDF)
     outputToPDF('Ankle', dictionary, outputPDF)
 
     outputPDF.close()
-    os.system('test1.pdf')
+    #os.system(pdf_path)
+    return pdf_path
