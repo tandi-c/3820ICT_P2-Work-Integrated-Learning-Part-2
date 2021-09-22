@@ -9,13 +9,13 @@
                     
                     <form class="navbar-form navbar-left p-0 m-0" method="POST">
                         <div class="input-group flex-shrink-1">
-                            <form method="POST">
+                            {% comment %} <form method="POST">
                                 {% csrf_token %}
                                 <!-- Search Input-->
                                 <input type="search" class="custom-input-input" placeholder="Search" name="search"> 
                                 <!-- Search Button -->
                                 <button type="submit" class="btn custom-input-btn"><img src="/media/images/search_icon.svg"></button>
-                            </form>
+                            </form> {% endcomment %}
                         </div>
                     </form>
                     
@@ -35,11 +35,12 @@
                         <th class="text-center">Videos</th>
                         <th class="text-center">Last Updated</th>
                         <th class="text-center">Creation Date</th>
+                        <th></th>
                     </tr>
                 </thead>
                 {% if clients|length == 0 %}
                     <tr>
-                        <td colspan="5" class="text-center">No clients to display. Create a new client to begin video analysis.</td>
+                        <td colspan="6" class="text-center">No clients to display. Create a new client to begin video analysis.</td>
                     </tr>
                 {% else %}
                     {% for client in clients %}

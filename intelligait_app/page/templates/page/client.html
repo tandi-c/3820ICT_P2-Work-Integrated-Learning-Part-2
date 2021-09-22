@@ -1,7 +1,7 @@
 {% extends "page/base.html" %}
 {% block content %}
 {% load static %}
-<!--{{ client.videos }}-->
+
 <div class="d-flex h-100">
     <!-- Sidebar (left) -->
     <div class="d-flex align-items-end flex-column custom-background clientinfo-style p-2" style="min-width:250px;">
@@ -38,8 +38,8 @@
         <!-- Navigation Bar (tabs) -->
         <nav class="">
             <div class="nav" id="nav-tab" role="tablist">
-                <a class="nav-item pl-5 pr-5 custom-nav-item active" id="nav-anayses-tab" data-toggle="tab" href="#analyses" role="tab" aria-controls="analyses" aria-selected="true">Analyses</a>
-                <a class="nav-item pl-5 pr-5 custom-nav-item" id="nav-videos-tab" data-toggle="tab" href="#videos" role="tab" aria-controls="videos" aria-selected="false">Videos</a>
+                <a class="nav-item pl-5 pr-5 custom-nav-item active" id="nav-anayses-tab" data-toggle="tab" href="#analyses" role="tab" aria-controls="analyses" aria-selected="true">Videos</a>
+                <!-- <a class="nav-item pl-5 pr-5 custom-nav-item" id="nav-videos-tab" data-toggle="tab" href="#videos" role="tab" aria-controls="videos" aria-selected="true">Videos</a> -->
             </div>
         </nav>
         
@@ -56,12 +56,12 @@
                             
                             <!-- Search Bar -->
                             <form class="navbar-form navbar-left p-0 m-0" action="">
-                                <div class="input-group flex-shrink-1">
+                                {% comment %} <div class="input-group flex-shrink-1">
                                     <!-- Search Input-->
                                     <input type="search" class="custom-input-input" placeholder="Search" name="search"> 
                                     <!-- Search Button -->
                                     <button type="submit" class="btn custom-input-btn"><img src="/media/images/search_icon.svg"></button>
-                                </div>
+                                </div> {% endcomment %}
                             </form>
     
                             
@@ -76,19 +76,23 @@
                     <div>
                         <thead>
                             <tr>
-                                <th class="col-sm-6">Name</th>
-                                <th class="col-sm-6">Date Analysed</th>
+                                <th class="col-sm-5">Name</th>
+                                <th class="col-sm-4">Analysis</th>
+                                <th class="col-sm-3">Date Analysed</th>
+                                <th></th>
                             </tr>
                         </thead>
                         {% if videos|length == 0 %}
                             <tr>
-                                <td colspan="2" class="text-center">No analyses to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
+                                <td colspan="4" class="text-center">No analyses to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
                             </tr>
                         {% else %}
                             {% for video in videos %}
-                                <tr class="listed-client-style" data-href="{% url 'pdf-view' %}">
-                                    <th><small>{{ video.title }}</small></th>
+                                <tr class="listed-client-style">
+                                    <th data-href="{% url 'video-modal' client.id video.id %}"><small>{{ video.title }}</small></th>
+                                    <th data-href="{% url 'pdf-view' client.id video.analysis_title %}"><small>{{ video.analysis_title }}</small></th>
                                     <th><small>{{ video.date_uploaded }}</small></th>
+                                    <td><a class="btn btn-light btn-sm" href="{% url 'delete-video' client.id video.id %}"><i class="bi bi-pencil-square"></i></a></td>
                                 </tr>
                             {% endfor %}
                         {% endif %}
@@ -96,7 +100,7 @@
                 </table>
             </div>
             
-            <!-- Signup. -->
+            {% comment %} <!-- Signup. -->
             <div class="tab-pane" id="videos" role="tabpanel" aria-labelledby="nav-videos-tab">
                 <table id="dtBasicExample" class="table table-hover table-light" cellspacing="0" width="100%">
                     <!-- Table Navigation Bar -->
@@ -124,6 +128,7 @@
                         <thead>
                             <tr>
                                 <th class="col-sm-4">Name</th>
+                                <th class="col-sm-4">Analysis</th>
                                 <th class="col-sm-4">Date Uploaded</th>
                             </tr>
                         </thead>
@@ -133,15 +138,16 @@
                             </tr>
                         {% else %}
                             {% for video in videos %}
-                                <tr class="open-modal listed-client-style" data-href="{% url 'video-modal' client.id video.id %}" data-popup-url="{% url 'video-modal' client.id video.id %}">
-                                    <th><small>{{ video.title }}</small></th>
+                                <tr class="open-modal listed-client-style">
+                                    <th data-href="{% url 'video-modal' client.id video.id %}"><small>{{ video.title }}</small></th>
+                                    <th data-href="{% url 'pdf-view' %}"><small>Analysis.pdf</small></th>
                                     <th><small>{{ video.date_uploaded }}</small></th>
                                 </tr>
                             {% endfor %}
                         {% endif %}
                     </div>
                 </table>
-            </div>
+            </div> {% endcomment %}
         </div>
     </article>
 </div>
