@@ -14,7 +14,6 @@ urlpatterns = [
     path('client/<int:pk>/update', ClientUpdateView.as_view(), name='update-client'),
     path('client/<int:pk>/delete', ClientDeleteView.as_view(), name='delete-client'),
     path('client/<int:pk>/upload-video/', ClientUploadView.as_view(), name='upload-video'),
-    path('client/<int:pk>/delete-video/<int:video_pk>', VideoDeleteView.as_view(), name='delete-video'),
     path('client/<int:pk>/video-modal/<int:video_pk>/', ClientVideoView.as_view(), name='video-modal'),
     path('client/<int:pk>/view-pdf/<str:path>/', views.pdf_view, name='pdf-view'), 
 ]
