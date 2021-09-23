@@ -499,4 +499,8 @@ div.d-flex.align-items-end.flex-column.custom-background.clientinfo-style.p-2 {
     margin-left: auto;
     margin-right: auto;
     padding-top: 0%;
+}
+
+.footer {
+    flex-shrink: 0;
   }

@@ -40,6 +40,7 @@ class Video(models.Model):
     client_id = models.ForeignKey(Client, default=None, on_delete=models.CASCADE, blank=True)
     title = models.CharField(max_length=500)
     video = models.FileField(upload_to="videos/", default="Nothing")
+    skeleton_video = models.FileField(default="Nothing")
     analysis = models.FilePathField(default="No Analysis")
     analysis_title = models.CharField(max_length=100, default=None, blank=True, null=True)
     date_uploaded = models.DateTimeField(default=timezone.now)
