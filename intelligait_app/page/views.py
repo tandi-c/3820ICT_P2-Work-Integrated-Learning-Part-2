@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
-from django.urls import reverse
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.urls import reverse, reverse_lazy
+from django.http import HttpResponseRedirect, HttpResponseNotFound, FileResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.files.storage import FileSystemStorage
@@ -9,7 +9,8 @@ from .forms import VideoForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-# Create your views here.
+from tf_pose_estimation import main
+
 
 @login_required
 def home(request): 
@@ -34,6 +35,7 @@ def search(request):
 
         return HttpResponseRedirect('home', term)
 
+
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'page/home.html'
@@ -50,6 +52,7 @@ class ClientListView(LoginRequiredMixin, ListView):
             print(context)
 
             return HttpResponseRedirect('', context)
+
 
 class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
@@ -87,6 +90,7 @@ class VideoListView(LoginRequiredMixin, ListView):
         context = super(VideoListView, self).get_context_data(*args, **kwargs)
         return context 
 
+
 class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     fields = ['first_name', 'last_name', 'notes']
@@ -96,6 +100,7 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         #form.instance.client_id = self.request.user.id 
         return super().form_valid(form)
+
 
 class ClientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Client
@@ -122,6 +127,7 @@ class ClientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return True
 
+
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
     success_url = '/'
@@ -135,13 +141,6 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
             return True
         return False
 
-class ClientAnalysisView(LoginRequiredMixin, DetailView):
-    model = Client
-    template_name = 'page/client_analysis.html'
-
-class ClientVideosView(LoginRequiredMixin, DetailView):
-    model = Client
-    template_name = 'page/client_videos.html'
 
 class ClientUploadView(LoginRequiredMixin, DetailView):
     model = Client
@@ -161,16 +160,23 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
             client = Client.objects.get(pk=pk)
             title = request.POST.get('title')
             video = request.FILES.get('video')
-            print(client_id, title, video)
             client.num_analyses += 1
             client.num_videos += 1
             client.save()
             form.save()
+            video_path = str(Video.objects.filter(title=title).last())
+
+            # This is what runs the pose estimation and analysis module 
+            pdf_path = main.main(video_path, title) 
+            video = Video.objects.last()
+            video.analysis = pdf_path
+            video.analysis_title = title + ".pdf"
+            video.save(force_update=True)
+
             context = {
                 'client': Client.objects.get(pk=pk), 
                 'videos': {Video.objects.filter(client_id=client)},
             }
-            print(Video.objects.filter(client_id=client).values())
 
             return HttpResponseRedirect(reverse('client', kwargs={'pk': pk}), context)
         
@@ -183,23 +189,24 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
         return HttpResponseRedirect(reverse('client', kwargs={'pk': pk}), context)
 
 
-def display(request):
 
-    videos = Video.objects.all()
+class VideoDeleteView(LoginRequiredMixin, DeleteView):
     context = {
-        'videos': videos,
+        'clients': Client.objects.all()
     }
-                
-    return render(request, 'client.html', context)
+    model = Video
+    success_url = reverse_lazy('client', context)
+    template_name = 'delete_video.html'
 
 
-def pdf_view(request):
+def pdf_view(request, *args, **kwargs):
+    pdf_name = str(kwargs['path'])
     fs = FileSystemStorage()
-    filename = 'analyses/analysis.pdf'
+    filename = 'analyses/' + pdf_name
     if fs.exists(filename):
         with fs.open(filename) as pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition']='attachment; filename="anaysis.pdf"'
+            response['Content-Disposition']='attachment; filename="{}"'.format(pdf_name)
             return response
     else:
         return HttpResponseNotFound('The requested pdf was not found in the server.')

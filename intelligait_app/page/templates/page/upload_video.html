@@ -9,7 +9,7 @@
                         <i class="bi bi-arrow-left"></i>
                     </a>
                 </div>
-                <form enctype="multipart/form-data" method="POST" action="">
+                <form enctype="multipart/form-data" method="POST" action="" name="uploadForm">
                     {% csrf_token %}
                     <fieldset class="form-group m-0 pt-3 pb-3">
                         <legend class="d-flex justify-content-center m-0 custom_header4_font">Upload Video</legend>
@@ -20,11 +20,24 @@
                         <label class="mt-4" for="video">Video<span class="asteriskField">*</span></label>
                         <input class="mb-2 form-control-file" type="file" name="video" accept="video/*" required>
                     </fieldset>
-                    <input class="btn btn_custom_blue w-100" type="submit" value="Analyse"/>
+                    <div id="welcomeDiv" style="display:none;">
+                        <p><small>Analysing video. This may take a few minutes...</small></p>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Ajax_loader_metal_512.gif" alt="Loading..." class="center pb-2" width="30"/>
+                    </div>
+                    <input class="btn btn_custom_blue w-100" type="submit" value="Analyse" name="answer" value="Show Div" onclick="showDiv()" />
                 </form>
                 <p>{{error}}</p>
             </div>
         </article>
     </div>
+    <script>
+        function showDiv() {
+            var title = document.forms["uploadForm"]["title"];
+            var video = document.forms["uploadForm"]["video"];
+            if(title.value != "" && video.value != "") {
+                document.getElementById('welcomeDiv').style.display = "block";
+            }
+        }
+    </script>
 </html>
 {% endblock content%}
