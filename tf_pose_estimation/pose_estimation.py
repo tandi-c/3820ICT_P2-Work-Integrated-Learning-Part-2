@@ -132,7 +132,6 @@ def run(video_file = None):
         frameRate += 1
         if frameRate % 3 != 0:
             print(frameRate)
-            # image = image_resize(image)
             image = resize(image)
 
             humans = e.inference(
