@@ -19,7 +19,7 @@ logger.addHandler(ch)
 args = {
     "resize": "0x0",
     "resize_out_ratio": 4.0,
-    "model": "mobilenet_thin",
+    "model": "cmu",
     "show_process": False,
     "tensorrt": "False",
 }
@@ -44,9 +44,9 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     dim = None
     (h, w) = image.shape[:2]
     if h > w:
-        height = 960
+        height = 720
     else:
-        width = 960
+        width = 720
 
     # check to see if the width is None
     if width is None:
@@ -143,49 +143,46 @@ def run(video_file = None):
 
             human = humans[0]
 
-            a = human.body_parts[1]
-            x = a.x*image.shape[1]
-            y = a.y*image.shape[0]
-            chest = (int(x), int(y))
+            # a = human.body_parts[1]
+            # x = a.x*image.shape[1]
+            # y = a.y*image.shape[0]
+            # chest = (int(x), int(y))
 
-            a = human.body_parts[8]
-            x = a.x*image.shape[1]
-            y = a.y*image.shape[0]
-            hip = (int(x), int(y))
+            # a = human.body_parts[8]
+            # x = a.x*image.shape[1]
+            # y = a.y*image.shape[0]
+            # hip = (int(x), int(y))
 
-            distance = int(math.sqrt( ((int(chest[0])-int(hip[0]))**2)+((int(chest[1])-int(hip[1]))**2) ))
-            distances.append(distance);
-            if (len(distances) > 15):
-                distances.pop(0)
-            normDist = int(sum(distances) / len(distances))
-            DATA.pointsDict["Distance"].append(normDist)
+            # distance = int(math.sqrt( ((int(chest[0])-int(hip[0]))**2)+((int(chest[1])-int(hip[1]))**2) ))
+            # distances.append(distance);
+            # if (len(distances) > 15):
+            #     distances.pop(0)
+            # normDist = int(sum(distances) / len(distances))
+            # DATA.pointsDict["Distance"].append(normDist)
 
-            start_point = (int(chest[0] - 1.5*(normDist)), int(chest[1] - 1.5*(normDist))) 
-            end_point = (int(hip[0] + 1.5*(normDist)), int(hip[1] + 2.5*(normDist))) 
+            # start_point = (int(chest[0] - 1.5*(normDist)), int(chest[1] - 1.5*(normDist))) 
+            # end_point = (int(hip[0] + 1.5*(normDist)), int(hip[1] + 2.5*(normDist))) 
 
             # image = draw_box(image, start_point, end_point)
-            image = fit_person(image, start_point, end_point)
+            # image = fit_person(image, start_point, end_point)
 
-            humans = e.inference(
-                image,
-                resize_to_default=(w > 0 and h > 0),
-                upsample_size=args["resize_out_ratio"],
-            )
+            # humans = e.inference(
+            #     image,
+            #     resize_to_default=(w > 0 and h > 0),
+            #     upsample_size=args["resize_out_ratio"],
+            # )
 
             image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
             
-            human = humans[0]
+            # human = humans[0]
             for i in range(14):
                 try: 
                     a = human.body_parts[i]
                     x = a.x*image.shape[1]
                     y = a.y*image.shape[0]
-                    # print(keyFeatures[i] + ": (" + str(x) + ", " + str(y) + ")")
                     DATA.pointsDict[keyFeatures[i]].append((int(x), int(y)))
                 except:
-                    # print("fail")
                     DATA.pointsDict[keyFeatures[i]].append(None)
-                    # pass
 
             cv2.putText(
                 image,
@@ -203,5 +200,4 @@ def run(video_file = None):
                 break
     vid_writer.release()
     cv2.destroyAllWindows()
-    print(DATA.pointsDict)
     return DATA.pointsDict
