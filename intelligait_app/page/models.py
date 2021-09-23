@@ -16,7 +16,6 @@ TITLES = (
 class Client(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    # title = models.CharField(max_length=4, choices=TITLES)
     dob = models.DateTimeField(default=timezone.now)
     email = models.EmailField(blank=True, null=True)
     phone_number = models.CharField(max_length=30, blank=True, null=True)
@@ -41,9 +40,9 @@ class Video(models.Model):
     client_id = models.ForeignKey(Client, default=None, on_delete=models.CASCADE, blank=True)
     title = models.CharField(max_length=500)
     video = models.FileField(upload_to="videos/", default="Nothing")
+    analysis = models.FilePathField(default="No Analysis")
+    analysis_title = models.CharField(max_length=100, default=None, blank=True, null=True)
     date_uploaded = models.DateTimeField(default=timezone.now)
-    #print(title)
-    #print(video)
 
     class Meta:
         verbose_name = 'video'
