@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Intelligait
 # 3820ICT - Work Integrated Learning Project
 
