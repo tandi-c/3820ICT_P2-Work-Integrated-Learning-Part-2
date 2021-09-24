@@ -9,5 +9,5 @@ Intelligait is a web application for the analysis of a persons gait. It uses Ten
 
 ## To use cmu model (Not default)
 
-Download graph_opt.pb from http://www.mediafire.com/file/qlzzr20mpocnpa3/graph_opt.pb and place in "models\graph\cmu"
+Download graph_opt.pb from http://www.mediafire.com/file/qlzzr20mpocnpa3/graph_opt.pb and place in "\tf_pose_estimation\models\graph\cmu"
 
