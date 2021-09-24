@@ -1,0 +1,41 @@
+{% extends "page/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<!-- Login & Sign Up  -->
+<div class="row justify-content-md-center">
+    <article class="p-4 col-lg-6">
+
+        <!-- Navigation Bar (tabs) -->
+        <nav class="">
+            <div class="nav nav-fill" id="nav-tab" role="tablist">
+                <a class="nav-item custom-nav-item active" id="nav-login-tab" data-toggle="tab" href="#nav-login" role="tab" aria-controls="nav-login" aria-selected="true">Login</a>
+                <a class="nav-item custom-nav-item" href="{% url 'register' %}"  aria-selected="false">Sign Up</a>
+            </div>
+        </nav>
+
+        <!-- Tab Content-->
+        <div class="tab-content custom-background p-4" id="nav-tabSignup">
+            <!-- Login. -->
+            <div class="tab-pane show active" id="nav-login" role="tabpanel" aria-labelledby="nav-login-tab">
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group m-0">{{ form|crispy }}</fieldset>
+                    
+                    <!-- Button: Login. -->
+                    <div class="form-group m-0">
+                        <button class="btn btn_custom_blue w-100" type="submit">Login</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Signup. -->
+            <div class="tab-pane" id="nav-signup" role="tabpanel" aria-labelledby="nav-signup-tab">
+                
+            </div>
+        </div>
+    </article>
+</div>
+    
+
+{% endblock content %}
