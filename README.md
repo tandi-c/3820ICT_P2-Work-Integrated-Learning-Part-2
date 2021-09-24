@@ -12,5 +12,5 @@ Then run the following command:
 
 ## To use CMU model
 
-Download graph_opt.pb from http://www.mediafire.com/file/qlzzr20mpocnpa3/graph_opt.pb and place in "\tf_pose_estimation\models\graph\cmu"
+Download graph_opt.pb from http://www.mediafire.com/file/qlzzr20mpocnpa3/graph_opt.pb and place in `\tf_pose_estimation\models\graph\cmu`
 
