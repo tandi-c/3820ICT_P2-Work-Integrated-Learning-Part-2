@@ -48,26 +48,28 @@
             
             <!-- Login. -->
             <div class="tab-pane show active" id="analyses" role="tabpanel" aria-labelledby="nav-analyses-tab">
+                <!-- Table -->
                 <table id="dtBasicExample" class="table table-hover table-light" cellspacing="0" width="100%">
                     
-                    <!-- Table Navigation Bar -->
+                    <!-- Navigation Bar -->
                     <nav class="custom-navigation-bar navbar navbar-inverse p-0">
                         <div class="container p-0" style="flex-wrap: nowrap;">
                             
                             <!-- Search Bar -->
                             <form class="navbar-form navbar-left p-0 m-0" action="">
-                                {% comment %} <div class="input-group flex-shrink-1">
+                                {% comment %}
+                                <div class="input-group flex-shrink-1">
                                     <!-- Search Input-->
                                     <input type="search" class="custom-input-input" placeholder="Search" name="search"> 
                                     <!-- Search Button -->
                                     <button type="submit" class="btn custom-input-btn"><img src="/media/images/search_icon.svg"></button>
-                                </div> {% endcomment %}
+                                </div>
+                                {% endcomment %}
                             </form>
-    
                             
                             <!-- Upload Video Button -->
                             <a class="float-right" href="{% url 'upload-video' object.id %}">
-                                <button type="button" class="btn btn_custom_blue mr-2 mb-1">Analyse Video</button>
+                                <button type="button" class="btn btn_custom_blue mr-2 mb-1">Upload Video</button>
                             </a>
 
                         </div>
@@ -76,10 +78,11 @@
                     <div>
                         <thead>
                             <tr>
-                                <th class="col-sm-5">Name</th>
-                                <th class="col-sm-4">Analysis</th>
-                                <th class="col-sm-3">Date Analysed</th>
-                                <th></th>
+                                <th scope="col">Original Video</th>
+                                <th scope="col">Pose Estimation Video</th>
+                                <th scope="col">Analysis (PDF)</th>
+                                <th scope="col">Date</th>
+
                             </tr>
                         </thead>
                         {% if videos|length == 0 %}
@@ -89,10 +92,17 @@
                         {% else %}
                             {% for video in videos %}
                                 <tr class="listed-client-style">
+                                    <!-- Original Video -->
                                     <th data-href="{% url 'video-modal' client.id video.id %}"><small>{{ video.title }}</small></th>
+                                    <!-- Skeleton Video -->
+                                    <th data-href="{% url 'pose-video-modal' client.id video.id %}"><small>{{ video.title }} Pose Estimation</small></th>
+                                    <!-- Analysis -->
                                     <th data-href="{% url 'pdf-view' client.id video.analysis_title %}"><small>{{ video.analysis_title }}</small></th>
+                                    <!-- Date -->
                                     <th><small>{{ video.date_uploaded }}</small></th>
-                                    <td><a class="btn btn-light btn-sm" href="{% url 'delete-video' client.id video.id %}"><i class="bi bi-pencil-square"></i></a></td>
+
+                                    <!-- Edit Button -->
+                                    {% comment %} <td><a class="btn btn-light btn-sm" href="{% url 'delete-video' client.id video.id %}"><i class="bi bi-pencil-square"></i></a></td> {% endcomment %}
                                 </tr>
                             {% endfor %}
                         {% endif %}

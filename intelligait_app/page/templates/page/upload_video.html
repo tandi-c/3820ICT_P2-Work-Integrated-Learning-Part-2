@@ -21,8 +21,8 @@
                         <input class="mb-2 form-control-file" type="file" name="video" accept="video/*" required>
                     </fieldset>
                     <div id="welcomeDiv" style="display:none;">
-                        <p><small>Analysing video. This may take a few minutes...</small></p>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Ajax_loader_metal_512.gif" alt="Loading..." class="center pb-2" width="30"/>
+                        <div><small>Analysing video. This may take a few minutes...</small></div>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Gray_circles_rotate.gif" alt="Loading..." class="center pb-3 antialiased" width="30"/>
                     </div>
                     <input class="btn btn_custom_blue w-100" type="submit" value="Analyse" name="answer" value="Show Div" onclick="showDiv()" />
                 </form>
@@ -30,6 +30,10 @@
             </div>
         </article>
     </div>
+    {% comment %} <div class="footer"><small><small>
+        <a href="https://commons.wikimedia.org/wiki/File:Ajax_loader_metal_512.gif">Krishprakash24gmail</a>, 
+        <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons
+    </small></small></div> {% endcomment %}
     <script>
         function showDiv() {
             var title = document.forms["uploadForm"]["title"];

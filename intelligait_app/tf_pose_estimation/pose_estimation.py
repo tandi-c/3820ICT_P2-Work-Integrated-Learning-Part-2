@@ -121,8 +121,8 @@ def run(video_file = None):
     height = image.shape[0]
     logger.info("cam image=%dx%d" % (height, width))
 
-    output_video = tf_pose_estimation.DATA.video_file[:-4] + "_pose_estimation.avi"
-    vid_writer = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc('M','J','P','G'), 10, (width,height))
+    output_video = tf_pose_estimation.DATA.video_file[:-4] + "_pose_estimation.mp4"
+    vid_writer = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc(*"avc1"), 10, (width,height)) 
     frameRate = 0
     tf_pose_estimation.DATA.resetDict()
 

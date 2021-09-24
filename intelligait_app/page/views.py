@@ -80,6 +80,20 @@ class ClientVideoView(LoginRequiredMixin, DetailView):
         return context
 
 
+class ClientPoseVideoView(LoginRequiredMixin, DetailView):
+    model = Client
+    template_name = 'page/pose_video_modal.html'
+    def get_context_data(self, *args, **kwargs):
+
+        video_pk = self.kwargs.get('video_pk', None)
+
+        context = super().get_context_data(*args, **kwargs)
+
+        client = self.get_object()
+        context['video'] = Video.objects.get(client_id=client, id=video_pk)
+        return context
+
+
 class VideoListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self, *args, **kwargs):
@@ -160,17 +174,25 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
             client = Client.objects.get(pk=pk)
             title = request.POST.get('title')
             video = request.FILES.get('video')
+            
             client.num_analyses += 1
             client.num_videos += 1
             client.save()
             form.save()
             video_path = str(Video.objects.filter(title=title).last())
+            pose_video_path = video_path.split('.', 1)
+            pose_video_path = pose_video_path[0]
+            pose_video_path = pose_video_path.replace("\\", "/")
 
             # This is what runs the pose estimation and analysis module 
             pdf_path = main.main(video_path, title) 
             video = Video.objects.last()
             video.analysis = pdf_path
             video.analysis_title = title + ".pdf"
+            skeleton_video_path = str(video).split('.', 1)
+            skeleton_video_path = str(skeleton_video_path[0]).split('\\')
+            skeleton_video_path1 = "videos/" + skeleton_video_path[-1] 
+            video.skeleton_video = skeleton_video_path1 + "_pose_estimation.mp4"
             video.save(force_update=True)
 
             context = {
