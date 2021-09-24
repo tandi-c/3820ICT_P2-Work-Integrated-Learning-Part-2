@@ -5,9 +5,12 @@ Intelligait is a web application for the analysis of a persons gait. It uses Ten
 
 ## Install Dependencies
 
+Must have python, pip and swig installed.
+
+Then run the following command:
 `pip install -r requirements.txt`
 
-## To use cmu model (Not default)
+## To use cmu model
 
 Download graph_opt.pb from http://www.mediafire.com/file/qlzzr20mpocnpa3/graph_opt.pb and place in "\tf_pose_estimation\models\graph\cmu"
 
