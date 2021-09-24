@@ -1,1 +1,9 @@
-3820ICT_P2-Work-Integrated-Learning-Part-2
+# Intelligait
+# 3820ICT - Work Integrated Learning Project
+
+Intelligait is a web application for the analysis of a persons walking gait.
+
+## Installation
+
+`pip install -r tf_pose_estimation/requirements.txt`
+
