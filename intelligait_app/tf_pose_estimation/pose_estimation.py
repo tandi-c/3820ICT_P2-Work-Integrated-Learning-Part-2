@@ -1,13 +1,12 @@
 import logging
 import time
-import tf_pose_estimation.DATA
+import tf_pose_estimation.DATA as DATA
 import math
 
 import cv2
 
 from tf_pose_estimation.tf_pose.estimator import TfPoseEstimator
 from tf_pose_estimation.tf_pose.networks import get_graph_path, model_wh
-import tf_pose_estimation.gait_analysis 
 
 logger = logging.getLogger("TfPoseEstimator-WebCam")
 logger.setLevel(logging.DEBUG)
@@ -20,13 +19,13 @@ logger.addHandler(ch)
 args = {
     "resize": "0x0",
     "resize_out_ratio": 4.0,
-    "model": "mobilenet_thin",
+    "model": "cmu",
     "show_process": False,
     "tensorrt": "False",
 }
 
 fps_time = 0
-keyFeatures = tf_pose_estimation.DATA.keyFeatures
+keyFeatures = DATA.keyFeatures
 distances = []
 width = 0
 height = 0
@@ -45,9 +44,9 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     dim = None
     (h, w) = image.shape[:2]
     if h > w:
-        height = 960
+        height = 720
     else:
-        width = 960
+        width = 720
 
     # check to see if the width is None
     if width is None:
@@ -114,17 +113,16 @@ def run(video_file = None):
     if (video_file != None):
         cam = cv2.VideoCapture(video_file)
     else:
-        cam = cv2.VideoCapture(tf_pose_estimation.DATA.video_file)
+        cam = cv2.VideoCapture(DATA.video_file)
     ret_val, image = cam.read()
     image = image_resize(image)
     width = image.shape[1]
     height = image.shape[0]
     logger.info("cam image=%dx%d" % (height, width))
 
-    output_video = tf_pose_estimation.DATA.video_file[:-4] + "_pose_estimation.mp4"
-    vid_writer = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc(*"avc1"), 10, (width,height)) 
+    output_video = DATA.video_file[:-4] + "_pose_estimation.mp4"
+    vid_writer = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc(*"avc1"), 10, (width, height))
     frameRate = 0
-    tf_pose_estimation.DATA.resetDict()
 
     while True:
         ret_val, image = cam.read()
@@ -134,7 +132,6 @@ def run(video_file = None):
         frameRate += 1
         if frameRate % 3 != 0:
             print(frameRate)
-            # image = image_resize(image)
             image = resize(image)
 
             humans = e.inference(
@@ -145,50 +142,46 @@ def run(video_file = None):
 
             human = humans[0]
 
-            a = human.body_parts[1]
-            x = a.x*image.shape[1]
-            y = a.y*image.shape[0]
-            chest = (int(x), int(y))
+            # a = human.body_parts[1]
+            # x = a.x*image.shape[1]
+            # y = a.y*image.shape[0]
+            # chest = (int(x), int(y))
 
-            a = human.body_parts[8]
-            x = a.x*image.shape[1]
-            y = a.y*image.shape[0]
-            hip = (int(x), int(y))
+            # a = human.body_parts[8]
+            # x = a.x*image.shape[1]
+            # y = a.y*image.shape[0]
+            # hip = (int(x), int(y))
 
-            distance = int(math.sqrt( ((int(chest[0])-int(hip[0]))**2)+((int(chest[1])-int(hip[1]))**2) ))
-            distances.append(distance)
-            if (len(distances) > 15):
-                distances.pop(0)
-            normDist = int(sum(distances) / len(distances))
-            #print(tf_pose_estimation.DATA.pointsDict)
-            tf_pose_estimation.DATA.pointsDict["Distance"].append(normDist)
+            # distance = int(math.sqrt( ((int(chest[0])-int(hip[0]))**2)+((int(chest[1])-int(hip[1]))**2) ))
+            # distances.append(distance);
+            # if (len(distances) > 15):
+            #     distances.pop(0)
+            # normDist = int(sum(distances) / len(distances))
+            # DATA.pointsDict["Distance"].append(normDist)
 
-            start_point = (int(chest[0] - 1.5*(normDist)), int(chest[1] - 1.5*(normDist))) 
-            end_point = (int(hip[0] + 1.5*(normDist)), int(hip[1] + 2.5*(normDist))) 
+            # start_point = (int(chest[0] - 1.5*(normDist)), int(chest[1] - 1.5*(normDist))) 
+            # end_point = (int(hip[0] + 1.5*(normDist)), int(hip[1] + 2.5*(normDist))) 
 
             # image = draw_box(image, start_point, end_point)
-            image = fit_person(image, start_point, end_point)
+            # image = fit_person(image, start_point, end_point)
 
-            humans = e.inference(
-                image,
-                resize_to_default=(w > 0 and h > 0),
-                upsample_size=args["resize_out_ratio"],
-            )
+            # humans = e.inference(
+            #     image,
+            #     resize_to_default=(w > 0 and h > 0),
+            #     upsample_size=args["resize_out_ratio"],
+            # )
 
             image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
             
-            human = humans[0]
+            # human = humans[0]
             for i in range(14):
                 try: 
                     a = human.body_parts[i]
                     x = a.x*image.shape[1]
                     y = a.y*image.shape[0]
-                    # print(keyFeatures[i] + ": (" + str(x) + ", " + str(y) + ")")
-                    tf_pose_estimation.DATA.pointsDict[keyFeatures[i]].append((int(x), int(y)))
+                    DATA.pointsDict[keyFeatures[i]].append((int(x), int(y)))
                 except:
-                    # print("fail")
-                    tf_pose_estimation.DATA.pointsDict[keyFeatures[i]].append(None)
-                    # pass
+                    DATA.pointsDict[keyFeatures[i]].append(None)
 
             cv2.putText(
                 image,
@@ -206,6 +199,4 @@ def run(video_file = None):
                 break
     vid_writer.release()
     cv2.destroyAllWindows()
-    #print(tf_pose_estimation.DATA.pointsDict)
-
-    return tf_pose_estimation.DATA.pointsDict
+    return DATA.pointsDict
