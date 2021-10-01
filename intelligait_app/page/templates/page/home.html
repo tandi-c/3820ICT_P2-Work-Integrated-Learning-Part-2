@@ -1,68 +1,70 @@
 {% extends "page/base.html" %}
 {% block content %}
 
-<div class="content-section home-style custom-background">
-    <table id="dtBasicExample" class="table table-hover table-light m-0" cellspacing="0" width="100%">
-        {% if user.is_staff and user.is_authenticated %}
-            <nav class="custom-navigation-bar navbar navbar-inverse p-0">
-                <div class="container p-0" style="flex-wrap: nowrap;">
-                    
-                    <form class="navbar-form navbar-left p-0 m-0" method="POST">
-                        <div class="input-group flex-shrink-1">
-                            {% comment %} <form method="POST">
-                                {% csrf_token %}
-                                <!-- Search Input-->
-                                <input type="search" class="custom-input-input" placeholder="Search" name="search"> 
-                                <!-- Search Button -->
-                                <button type="submit" class="btn custom-input-btn"><img src="/media/images/search_icon.svg"></button>
-                            </form> {% endcomment %}
-                        </div>
-                    </form>
-                    
-
-                    <!-- Button trigger modal -->
-                    <a href="{% url 'create-client'%}">
-                        <button type="button" class="btn btn_custom_blue nav-link float-right">New Client</button>
+<!-- TABLE -->
+  <!-- Client Analyses & Videos -->
+    <div class="d-flex flex-grow-1 m-md-3 mw-100">
+        <div class="d-flex flex-column align-items-stretch flex-grow-1 mw-100 custom-background p-3">
+            <!-- TABLE: NAVBAR (tabs) -->
+            <!-- if user is authenticated and staff member -->
+            {% if user.is_staff and user.is_authenticated %}
+                <nav class="d-flex align-items-center">
+                    <a class="ms-auto pe-2" href="{% url 'create-client'%}">
+                        <button type="button" class="btn btn_custom_blue mr-2 mb-1">New Client</button>
                     </a>
+                </nav>
+
+                <div class="list-group list-group-flush scrollarea">
+                    <div class="table-responsive mw-100 ">
+                    
+                        <table id="dtBasicExample" class="table table-hover table-light align-middle" cellspacing="0" width="100%">
+                        
+                            <div class="">
+                                <thead class="css_table_header">
+                                    <tr class="tab-style">
+                                        <th>Name</th>
+                                        <th class="text-center">Analyses</th>
+                                        <th class="text-center">Videos</th>
+                                        <th class="text-center">Last Updated</th>
+                                        <th class="text-center">Creation Date</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="css_table_body">
+                                {% if clients|length == 0 %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No clients to display. Create a new client to begin video analysis.</td>
+                                    </tr>
+                                {% else %}
+                                    {% for client in clients %}
+                                    <tr class="listed-client-style" data-href="{% url 'client' client.id %}">
+                                        <td class="table-link"><small>{{ client.first_name }} {{ client.last_name }}</small></td>
+                                        <td class="text-center"><small>{{ client.num_analyses }}</small></td>
+                                        <td class="text-center"><small>{{ client.num_videos }}</small></td>
+                                        <td class="text-center"><small>{{ client.last_updated }}</small></td>
+                                        <td class="text-center"><small>{{ client.creation_date}}</small></td>
+                                        <td><a class="btn btn-light btn-sm mt-auto mb-auto" href="{% url 'update-client' client.id %}"><i class="bi bi-pencil-square"></i></a></td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                </tbody>
+                            </div>
+                        </table>
+                    </div>
                 </div>
-            </nav>
-            
-            <div>
-                <thead>
-                    <tr class="tab-style">
-                        <th>Name</th>
-                        <th class="text-center">Analyses</th>
-                        <th class="text-center">Videos</th>
-                        <th class="text-center">Last Updated</th>
-                        <th class="text-center">Creation Date</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                {% if clients|length == 0 %}
-                    <tr>
-                        <td colspan="6" class="text-center">No clients to display. Create a new client to begin video analysis.</td>
-                    </tr>
-                {% else %}
-                    {% for client in clients %}
-                    <tr class="listed-client-style" data-href="{% url 'client' client.id %}">
-                        <td class="table-link"><small>{{ client.first_name }} {{ client.last_name }}</small></td>
-                        <td class="text-center"><small>{{ client.num_analyses }}</small></td>
-                        <td class="text-center"><small>{{ client.num_videos }}</small></td>
-                        <td class="text-center"><small>{{ client.last_updated }}</small></td>
-                        <td class="text-center"><small>{{ client.creation_date}}</small></td>
-                        <td><a class="btn btn-light btn-sm" href="{% url 'update-client' client.id %}"><i class="bi bi-pencil-square"></i></a></td>
-                    </tr>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        {% endif %}
-    {% if not user.is_staff and user.is_authenticated %}
-    <div class="container">
-        <div class="row" id="content">
-            You must be a staff member to view this page.
+            {% endif %}
+
+            <!-- If user is authenticated but not a staff member -->
+            {% if not user.is_staff and user.is_authenticated %}
+                <div class="container">
+                    <div class="row" id="content">
+                        You must be a staff member to view this page. 
+                    </div>
+                </div>
+            {% endif %}
+
         </div>
     </div>
-    {% endif %}
-        </table>
-    </div>
+
 {% endblock content %}

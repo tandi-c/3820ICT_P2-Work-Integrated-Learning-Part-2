@@ -3,38 +3,50 @@
 <html>
     <div class="row justify-content-md-center">
         <article class="col-lg-6 p-0">
-            <div class="custom-background padding_1 m-md-3">
-                <div class="w-100 mt-auto btn_wide">
-                    <a class="btn navigation-bar-style d-flex align-items-center pl-2 btn_wide" href="{% url 'client' client.id %}">
-                        <i class="bi bi-arrow-left"></i>
+            <div class="custom-background m-md-3">
+                <!-- HEADER -->
+                <div class="d-flex align-items-center">
+                    <a class="btn btn_back p-0 m-1" href="{% url 'client' client.id %}">
+                        <img src="/media/images/arrow_left_short.svg" alt="" width="42" height="42" fill="currentColor" class="d-inline-block">
                     </a>
+                    <span class="navigation-bar-style m-0 p-0 d-flex flex-fill justify-content-center">Upload Video</span>
                 </div>
-                <form enctype="multipart/form-data" method="POST" action="" name="uploadForm">
+                <div class="border-bottom"></div>
+
+                <!-- CONTENT -->
+                <form class="p-4" enctype="multipart/form-data" method="POST" action="" name="uploadForm">
                     {% csrf_token %}
-                    <fieldset class="form-group m-0 pt-3 pb-3">
-                        <legend class="d-flex justify-content-center m-0 custom_header4_font">Upload Video</legend>
+                    <fieldset class="form-group m-0 pt-2 pb-2">
                         {{form.as_p}}
                         <input type="hidden" name="client_id" value="{{client.id}}" required>
+                        <!-- Video Title (text input) -->
                         <label for="title">Video Title<span class="asteriskField">*</span></label>
-                        <input class="w-100 form-control" type="text" name="title" placeholder="Enter a relevant video title..." required>
-                        <label class="mt-4" for="video">Video<span class="asteriskField">*</span></label>
-                        <input class="mb-2 form-control-file" type="file" name="video" accept="video/*" required>
+                        <input class="w-100 form-control" type="text" name="title" placeholder="Enter a relevant video title..." required
+                        style="border-color: #ededed;
+                        border-radius: 0px;
+                        border-width: 2px;">
+
+                        <!-- Video  (Drag & Drop or Choose File) -->
+                        <label class="mt-4" for="video">
+                            Video<span class="asteriskField">*</span>
+                        </label>
+                        <div class="upload-video-area d-flex flex-column align-items-left justify-content-center pt-2 pb-2">
+                            <input id="file" type="file" name="video" accept="video/*">
+                        </div>
                     </fieldset>
-                    <div id="welcomeDiv" style="display:none;">
-                        <div><small>Analysing video. This may take a few minutes...</small></div>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Gray_circles_rotate.gif" alt="Loading..." class="center pb-3 antialiased" width="30"/>
+
+                    <div id="welcomeDiv" style="display:none;" class="pb-3">
+                        <p class="css_form_text"><small>Analysing video. This may take a few minutes...</small></p>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Ajax_loader_metal_512.gif" alt="Loading..." class="center pb-2" width="30"/>
                     </div>
                     <input class="btn btn_custom_blue w-100" type="submit" value="Analyse" name="answer" value="Show Div" onclick="showDiv()" />
                 </form>
-                <p>{{error}}</p>
+                
             </div>
         </article>
     </div>
-    {% comment %} <div class="footer"><small><small>
-        <a href="https://commons.wikimedia.org/wiki/File:Ajax_loader_metal_512.gif">Krishprakash24gmail</a>, 
-        <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons
-    </small></small></div> {% endcomment %}
     <script>
+
         function showDiv() {
             var title = document.forms["uploadForm"]["title"];
             var video = document.forms["uploadForm"]["video"];

@@ -1,166 +1,111 @@
 {% extends "page/base.html" %}
 {% block content %}
 {% load static %}
+  <!-- SIDEBAR -->
+  <div class="d-none d-md-flex custom-background clientinfo-style p-0" style="min-width: 300px; max-width: 300px;">
+      <div class="d-flex flex-column align-items-stretch flex-grow-1 bg-white p-0 ">
+        
+        <!-- SIDEBAR: HEADER -->
+        <a class="d-flex align-items-center btn btn_back p-0 m-2" href="{% url 'page-home' %}">
+          <img src="/media/images/arrow_left_short.svg" alt="" width="42" height="42" fill="currentColor" class="d-inline-block">
+          <span class="navigation-bar-style">Back</span>
+        </a>
+        
+        <div class="border-bottom"></div>
 
-<div class="d-flex h-100">
-    <!-- Sidebar (left) -->
-    <div class="d-flex align-items-end flex-column custom-background clientinfo-style p-2" style="min-width:250px;">
-        <div class="w-100">
-            <div class="w-100 mt-auto">
-                <a class="btn navigation-bar-style d-flex align-items-center pl-2" href="{% url 'page-home' %}">
-                    <i class="bi bi-arrow-left"></i>
-                </a>
-            </div>
-            <div class="p-2">
-                <img class="rounded-circle account-img" src="{{ client.image.url }}">
-                <h3 class="article-content"> {{ client.first_name }} {{ client.last_name }}</h3>
-                <small class="text-muted">Created: {{ client.creation_date }}</small><br>
-                <small class="text-muted">Last Updated: {{ client.last_updated }}</small><br><br>
-                <h5 class="article-content mt-3">Client Data:</h5>
-                <small class="article-content">Number of Analyses: {{ client.num_analyses }}</small><br>
-                <small class="article-content">Number of Videos: {{ client.num_videos }}</small><br>
-                {% if client.notes %}
-                    <h5 class="article-content mt-3">Notes:</h5>
-                    <small class="article-content">{{ client.notes }}</small><br>
-                {% endif %}
-            </div>
-            
+        <!-- SIDEBAR: CONTENT -->
+        <div class="list-group list-group-flush scrollarea p-3 m-0 flex-grow-1">
+          <ul class="list-unstyled p-0 m-0">
+              <div class="p-2">
+                  <img class="rounded-circle account-img" src="{{ client.image.url }}">
+                  <h3 class="article-content"> {{ client.first_name }} {{ client.last_name }}</h3>
+                  <small class="text-muted">Created: {{ client.creation_date }}</small><br>
+                  <small class="text-muted">Last Updated: {{ client.last_updated }}</small><br><br>
+                  <h5 class="article-content mt-3">Client Data:</h5>
+                  <small class="article-content">Number of Analyses: {{ client.num_analyses }}</small><br>
+                  <small class="article-content">Number of Videos: {{ client.num_videos }}</small><br>
+                  {% if client.notes %}
+                      <h5 class="article-content mt-3">Notes:</h5>
+                      <small class="article-content">{{ client.notes }}</small><br>
+                  {% endif %}
+              </div>
+          </ul>
         </div>
 
-        <div class="w-100 mt-auto">
-            <a class="btn btn_custom btn_update_1 w-100 mt-2" href="{% url 'update-client' client.id %}">Update Client</a>
-            <a class="btn btn_custom btn_delete w-100 mt-2" href="{% url 'delete-client' client.id %}">Delete Client</a>
+        <!-- SIDEBAR: BUTTONS -->
+        <div class="p-2">
+          <a class="btn btn_custom btn_update_1 w-100 mt-2" href="{% url 'update-client' client.id %}">Edit Client</a>
+          <a class="btn btn_custom btn_delete w-100 mt-2" href="{% url 'delete-client' client.id %}">Delete Client</a>
+        </div>
+      </div>
+    </div>
+
+  <!-- TABLE -->
+  <!-- Client Analyses & Videos -->
+  <div class="d-flex flex-grow-1 p-md-3 m-0 mw-100">
+      <div class="d-flex flex-column align-items-stretch flex-grow-1 mw-100 custom-background ">
+        <!-- TABLE: NAVBAR (tabs) -->
+        <nav class="d-none d-md-flex align-items-center css_header_bar p-2">
+            <span class="ps-3">Videos & Analyses</span>
+            <a class="ms-auto pe-0" href="{% url 'upload-video' object.id %}">
+                <button type="button" class="btn btn_custom_blue mr-2 mb-1">Upload Video</button>
+            </a>
+        </nav>
+
+      <div class="d-flex d-md-none align-items-center css_header_bar m-0 p-2">
+          <a class="btn btn_back p-0 m-0" href="{% url 'client' client.id %}">
+              <img src="/media/images/arrow_left_short.svg" alt="" width="42" height="42" fill="currentColor" class="d-inline-block">
+          </a>
+          <span class="ps-1">Videos & Analyses</span>
+          <a class="ms-auto" href="{% url 'upload-video' object.id %}">
+              <button type="button" class="btn btn_custom_blue">Upload Video</button>
+          </a>
+      </div>
+
+      <div class="list-group list-group-flush  scrollarea">
+        <div class="table-responsive mw-100 m-3">
+            <table id="dtBasicExample" class="table table-light align-middle" cellspacing="0" width="100%">
+                <div>
+                    <thead class="css_table_header">
+                        <tr>
+                            <th scope="col">Original Video</th>
+                            <th scope="col">Pose Estimation Video</th>
+                            <th scope="col">Analysis (PDF)</th>
+                            <th scope="col">Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="css_table_body">
+                        {% if videos|length == 0 %}
+                        <tr>
+                            <td colspan="5" class="text-center">No analyses to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
+                        </tr>
+                        {% else %}
+                        {% for video in videos %}
+                        <tr class="listed-client-style css_table_client">
+                            <!-- Original Video -->
+                            <td data-href="{% url 'video-modal' client.id video.id %}"><small>{{ video.title }}</small></td>
+                            <!-- Skeleton Video -->
+                            <td data-href="{% url 'pose-video-modal' client.id video.id %}"><small>{{ video.title }} Pose Estimation</small></td>
+                            <!-- Analysis -->
+                            <td data-href="{% url 'pdf-view' client.id video.analysis_title %}"><small>{{ video.analysis_title }}</small></td>
+                            <!-- Date -->
+                            <td><small>{{ video.date_uploaded }}</small></td>
+
+                            <!-- Edit Button -->
+                            {% comment %} <td><a class="btn btn-light btn-sm float-right float-shrink align-self-center" href="{% url 'delete-video' client.id video.id %}"><i class="bi bi-pencil-square"></i></a></td> {% endcomment %}
+                        </tr>
+
+                           
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </div>
+            </table>
         </div>
     </div>
-    
-    <!-- Client Analyses & Videos -->
-    <article class="p-3 m-0 w-100">
-        <!-- Navigation Bar (tabs) -->
-        <nav class="">
-            <div class="nav" id="nav-tab" role="tablist">
-                <a class="nav-item pl-5 pr-5 custom-nav-item active" id="nav-anayses-tab" data-toggle="tab" href="#analyses" role="tab" aria-controls="analyses" aria-selected="true">Videos</a>
-                <!-- <a class="nav-item pl-5 pr-5 custom-nav-item" id="nav-videos-tab" data-toggle="tab" href="#videos" role="tab" aria-controls="videos" aria-selected="true">Videos</a> -->
-            </div>
-        </nav>
-        
-        <!-- Tab Content-->
-        <div class="tab-content custom-background p-3" id="nav-tabClient" style="border:none;">
-            
-            <!-- Login. -->
-            <div class="tab-pane show active" id="analyses" role="tabpanel" aria-labelledby="nav-analyses-tab">
-                <!-- Table -->
-                <table id="dtBasicExample" class="table table-hover table-light" cellspacing="0" width="100%">
-                    
-                    <!-- Navigation Bar -->
-                    <nav class="custom-navigation-bar navbar navbar-inverse p-0">
-                        <div class="container p-0" style="flex-wrap: nowrap;">
-                            
-                            <!-- Search Bar -->
-                            <form class="navbar-form navbar-left p-0 m-0" action="">
-                                {% comment %}
-                                <div class="input-group flex-shrink-1">
-                                    <!-- Search Input-->
-                                    <input type="search" class="custom-input-input" placeholder="Search" name="search"> 
-                                    <!-- Search Button -->
-                                    <button type="submit" class="btn custom-input-btn"><img src="/media/images/search_icon.svg"></button>
-                                </div>
-                                {% endcomment %}
-                            </form>
-                            
-                            <!-- Upload Video Button -->
-                            <a class="float-right" href="{% url 'upload-video' object.id %}">
-                                <button type="button" class="btn btn_custom_blue mr-2 mb-1">Upload Video</button>
-                            </a>
-
-                        </div>
-                    </nav>
-
-                    <div>
-                        <thead>
-                            <tr>
-                                <th scope="col">Original Video</th>
-                                <th scope="col">Pose Estimation Video</th>
-                                <th scope="col">Analysis (PDF)</th>
-                                <th scope="col">Date</th>
-
-                            </tr>
-                        </thead>
-                        {% if videos|length == 0 %}
-                            <tr>
-                                <td colspan="4" class="text-center">No analyses to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
-                            </tr>
-                        {% else %}
-                            {% for video in videos %}
-                                <tr class="listed-client-style">
-                                    <!-- Original Video -->
-                                    <th data-href="{% url 'video-modal' client.id video.id %}"><small>{{ video.title }}</small></th>
-                                    <!-- Skeleton Video -->
-                                    <th data-href="{% url 'pose-video-modal' client.id video.id %}"><small>{{ video.title }} Pose Estimation</small></th>
-                                    <!-- Analysis -->
-                                    <th data-href="{% url 'pdf-view' client.id video.analysis_title %}"><small>{{ video.analysis_title }}</small></th>
-                                    <!-- Date -->
-                                    <th><small>{{ video.date_uploaded }}</small></th>
-
-                                    <!-- Edit Button -->
-                                    {% comment %} <td><a class="btn btn-light btn-sm" href="{% url 'delete-video' client.id video.id %}"><i class="bi bi-pencil-square"></i></a></td> {% endcomment %}
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                </table>
-            </div>
-            
-            {% comment %} <!-- Signup. -->
-            <div class="tab-pane" id="videos" role="tabpanel" aria-labelledby="nav-videos-tab">
-                <table id="dtBasicExample" class="table table-hover table-light" cellspacing="0" width="100%">
-                    <!-- Table Navigation Bar -->
-                    <nav class="custom-navigation-bar navbar navbar-inverse p-0">
-                        <div class="container p-0" style="flex-wrap: nowrap;">
-                            
-                            <!-- Search Bar -->
-                            <form class="navbar-form navbar-left p-0 m-0" action="">
-                                <div class="input-group flex-shrink-1">
-                                    <!-- Search Input-->
-                                    <input type="search" class="custom-input-input" placeholder="Search" name="search"> 
-                                    <!-- Search Button -->
-                                    <button type="submit" class="btn custom-input-btn"><img src="/media/images/search_icon.svg"></button>
-                                </div>
-                            </form>
-    
-                            <!-- Upload Video Button -->
-                            <a class="float-right" href="{% url 'upload-video' client.id %}">
-                                <button type="button" class="btn btn_custom_blue mr-2 mb-1">Analyse Video</button>
-                            </a>
-                        </div>
-                    </nav>
-                    <div>
-                    
-                        <thead>
-                            <tr>
-                                <th class="col-sm-4">Name</th>
-                                <th class="col-sm-4">Analysis</th>
-                                <th class="col-sm-4">Date Uploaded</th>
-                            </tr>
-                        </thead>
-                        {% if videos|length == 0 %}
-                            <tr>
-                                <td colspan="2" class="text-center">No videos to display. Click the 'Analyse Video' button above to upload and analyse a video.</td>
-                            </tr>
-                        {% else %}
-                            {% for video in videos %}
-                                <tr class="open-modal listed-client-style">
-                                    <th data-href="{% url 'video-modal' client.id video.id %}"><small>{{ video.title }}</small></th>
-                                    <th data-href="{% url 'pdf-view' %}"><small>Analysis.pdf</small></th>
-                                    <th><small>{{ video.date_uploaded }}</small></th>
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                </table>
-            </div> {% endcomment %}
-        </div>
-    </article>
-</div>
+    </div>
+  </div>
 
 
 {% endblock content %}

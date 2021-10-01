@@ -75,45 +75,6 @@ small.form-text.text-muted {
 }
 
 
-/* Tab Style*/
-a.nav-link.table-link {
-  /* TEXT */
-  font-family: Raleway;
-  font-style: normal;
-  line-height: 24px;
-  color: #5B626E;
-  font-size: 18px;
-  text-decoration: none;
-  text-transform: capitalize;
-  text-align: center;
-  font-weight: 700;
-  
-  /* APPEARANCE */
-  background-color: #FFFFFF;
-  border: none;
-  border-radius: 0;
-  outline: none;
-  padding: 14px 24px;
-  
-  /* Bottom Border */
-  box-shadow: inset 0 -1.5px 0 #97A3B8;
-}
-
-a.nav-link.table-link:hover {
-  /* TEXT */
-	color: #5B626E;
-
-  /* APPEARANCE */
-  background-color: #DDDDDD;
-  box-shadow: inset 0 -2.5px 0 #5B626E;
-  
-}
-
-a.nav-link.table-link.active.show {
-  color: #11141A;
-	box-shadow: inset 0 -4px 0 #FFA101;
-}
-
 
 
 
@@ -148,12 +109,6 @@ div.container {
   min-height: calc(100% - 55px); 
   overflow: hidden;
     
-}
-html, body, flex {
-  height: 100%;
-  max-width: 100%;
-  margin: 0;
-  overflow: hidden;
 }
 
 .outer {
@@ -475,12 +430,6 @@ div.header-bar {
   line-height: 18px;
 }
 
-html, body, main, .row, .container {
-  margin-left: 0px;
-  margin-right: 0px;
-  padding: 0px;
-  width: 100%;
-}
 
 .analyses-videos-style {
   margin: 0px;
@@ -495,36 +444,6 @@ html, body, main, .row, .container {
   width: 100%;
 }
 
-thead tr th {
-  /* TEXT */
-  font-family: Raleway;
-  font-style: normal;
-  line-height: 24px;
-  color: #11141A;
-  font-size: 18px;
-  text-decoration: none;
-  text-transform: capitalize;
-  font-weight: 700;
-  
-  /* APPEARANCE */
-  background-color: #FFFFFF;
-  border: none;
-  border-radius: 0;
-  outline: none;
-  padding: 11px 10px;
-  
-  /* Bottom Border */
-  box-shadow: inset 0 -1.5px 0 #463F8A;
-}
-
-thead tr th:hover {
-  box-shadow: inset 0 -2.px 0 #E2E7EE;
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-thead tr th.active {
-  color: #463F8A;
-}
 
 a.nav-link.table-link:hover {
   /* TEXT */

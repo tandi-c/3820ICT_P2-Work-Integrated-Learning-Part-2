@@ -42,6 +42,12 @@ class ClientListView(LoginRequiredMixin, ListView):
     context_object_name = 'clients'
     ordering = ['first_name']
 
+    def get_context_data(self):
+        context = {
+            'clients': Client.objects.filter(user_id=self.request.user.id)
+        }
+        return context
+
     def post(self, request):
         if request.method == 'POST':
             term = request.POST.get('search')
@@ -112,7 +118,11 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     context_object_name = 'clients'
 
     def form_valid(self, form):
-        #form.instance.client_id = self.request.user.id 
+        print("here")
+        print(form)
+        form.instance.user_id = self.request.user
+        print("here2")
+        print(form.instance.user_id)
         return super().form_valid(form)
 
 

@@ -61,15 +61,6 @@ ul {
   font-weight: 500;
 }
 
-.table-link {
-  color: #171616;
-  font-weight: lighter;
-}
-
-.table-link:hover {
-  color: #4a4a4a;
-  font-weight: bold;
-}
 
 .content-section {
   padding: 10px 20px;

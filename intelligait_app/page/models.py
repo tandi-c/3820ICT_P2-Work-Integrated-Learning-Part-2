@@ -26,7 +26,7 @@ class Client(models.Model):
     analyses = []
     last_updated = models.DateTimeField(auto_now=True)
     creation_date = models.DateTimeField(default=timezone.now)
-    #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.FileField(default="profile_pics/default.jpg")
 
     def __str__(self):

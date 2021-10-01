@@ -1,0 +1,35 @@
+{% extends "page/base.html" %}
+{% block content %}
+
+
+<div class="row justify-content-md-center">
+    <article class="col-lg-6 p-0">
+        <div class="custom-background m-md-3">
+            <!-- HEADER -->
+            <div class="d-flex align-items-center">
+                <a class="btn btn_back p-0 m-1" href="{% url 'client' object.id %}">
+                    <img src="/media/images/arrow_left_short.svg" alt="" width="42" height="42" fill="currentColor" class="d-inline-block">
+                </a>
+                <span class="navigation-bar-style m-0 p-0 d-flex flex-fill justify-content-center">
+                    Delete Video
+                </span>
+            </div>
+            <div class="border-bottom"></div>
+
+            <form class="p-3" method="POST">
+                {% csrf_token %}
+                <fieldset class="">
+                    <p class="text-dark m-0 pt-3 pb-3">Are you sure you wish to delete "{{ object.title }}?"</p>
+                </fieldset>
+                
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn_custom btn_delete pl-3 pr-3 m-1 mb-0" type="submit">Yes, Delete</button>
+                    <a class="btn btn_custom_blue pl-3 pr-3 m-1 mb-0" href="{% url 'client' object.id %}">Cancel.</a>
+                </div>
+                
+            </form>
+        </div>
+    </article>
+</div>
+
+{% endblock content %}
