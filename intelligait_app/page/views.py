@@ -118,11 +118,7 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     context_object_name = 'clients'
 
     def form_valid(self, form):
-        print("here")
-        print(form)
         form.instance.user_id = self.request.user
-        print("here2")
-        print(form.instance.user_id)
         return super().form_valid(form)
 
 
@@ -180,7 +176,6 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
         form = VideoForm(request.POST, request.FILES)
         
         if request.method == 'POST' and form.is_valid(): 
-            client_id = request.POST.get('client_id')
             client = Client.objects.get(pk=pk)
             title = request.POST.get('title')
             video = request.FILES.get('video')
@@ -194,7 +189,7 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
             pose_video_path = pose_video_path[0]
             pose_video_path = pose_video_path.replace("\\", "/")
 
-            # This is what runs the pose estimation and analysis module 
+            # This runs the pose estimation and analysis module 
             pdf_path = main.main(video_path, title) 
             video = Video.objects.last()
             video.analysis = pdf_path
