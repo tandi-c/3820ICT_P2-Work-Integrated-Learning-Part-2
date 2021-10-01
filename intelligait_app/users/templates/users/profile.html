@@ -5,19 +5,11 @@
 <div class="d-flex flex-grow-1 p-md-3 m-0 mw-100">
     <div class="d-flex flex-column align-items-stretch flex-grow-1 mw-100 custom-background ">
         <div class="d-flex align-items-center css_header_bar m-0 p-0">
-            {% if user.is_staff%}
-            <a class="btn btn_back p-0 m-1" href="/">
+            <a class="btn btn_back p-0 m-1" href="{% url 'page-home' %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
                 </svg>
-            </a>
-            {% else %}
-            <a class="btn btn_back p-0 m-1" href="{% url 'client' object.id %}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
-                </svg>
-            </a>
-            {% endif %}            
+            </a>          
             <span class="navigation-bar-style d-flex flex-grow-1 m-1 p-0">Edit Profile</span>
         </div>
 
@@ -27,11 +19,8 @@
                 <div class="media m-0 p-0 d-flex flex-row">
                     <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
                     <div class="media-body">
-                        {% if user.is_staff%}
                         <h2 class="account-heading">{{user.username}}</h2>
-                        {% else %}
-                        <h2 class="account-heading">{{user.first_name}} {{user.last_name}}</h2>
-                        {% endif %}
+                        <h4>{{user.first_name}} {{user.last_name}}</h4>
                         <p class="text-secondary">{{ user.email }}</p>
                     </div>
                 </div>

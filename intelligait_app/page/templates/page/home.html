@@ -7,7 +7,6 @@
         <div class="d-flex flex-column align-items-stretch flex-grow-1 mw-100 custom-background p-3">
             <!-- TABLE: NAVBAR (tabs) -->
             <!-- if user is authenticated and staff member -->
-            {% if user.is_staff and user.is_authenticated %}
                 <nav class="d-flex align-items-center">
                     <a class="ms-auto pe-2" href="{% url 'create-client'%}">
                         <button type="button" class="btn btn_custom_blue mr-2 mb-1">New Client</button>
@@ -53,16 +52,15 @@
                         </table>
                     </div>
                 </div>
-            {% endif %}
 
             <!-- If user is authenticated but not a staff member -->
-            {% if not user.is_staff and user.is_authenticated %}
+            {% comment %} {% if not user.is_staff and user.is_authenticated %}
                 <div class="container">
                     <div class="row" id="content">
                         You must be a staff member to view this page. 
                     </div>
                 </div>
-            {% endif %}
+            {% endif %} {% endcomment %}
 
         </div>
     </div>
