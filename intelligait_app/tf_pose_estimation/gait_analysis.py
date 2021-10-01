@@ -45,10 +45,15 @@ def addLegends(leftData, rightData, keyword):       # add legend and standard de
     legend1 = plt.legend()
     leftVar = statistics.stdev(leftData)
     rightVar = statistics.stdev(rightData)
-    plt.legend([lines[i] for i in [0, 1]], ['Left ' + keyword + ' Standard Deviation is: ' + "{:.2f}".format(leftVar),
-                                            'Right ' + keyword + ' Standard Deviation is: ' + "{:.2f}".format(rightVar)]
-               , loc=3)
-    plt.gca().add_artist(legend1)
+    if leftVar > (rightVar * 1.5):
+        plt.legend([lines[i] for i in [0, 1]], ['Left Side has more variance and less stability.' + ' Standard Deviation is: ' + "{:.2f}".format(leftVar), 'Right Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(rightVar)], loc=3)
+        plt.gca().add_artist(legend1)
+    elif rightVar > (leftVar * 1.5):
+        plt.legend([lines[i] for i in [0, 1]], ['Right Side has more variance and less stability.' + ' Standard Deviation is: ' + "{:.2f}".format(rightVar), 'Left Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(leftVar)], loc=3)
+        plt.gca().add_artist(legend1)
+    else:
+        plt.legend([lines[i] for i in [0, 1]], ['Right Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(rightVar), 'Left Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(leftVar)], loc=3)
+        plt.gca().add_artist(legend1)
 
 
 def generateGraphs(leftData, rightData, outputFile, keyword):   # generates the graphs and outputs them to the pdf
