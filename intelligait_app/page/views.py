@@ -28,14 +28,9 @@ def home(request):
     else:
         return redirect('login')
 
-def search(request):
-    if request.method('POST'):
-        term = request.POST.get('search')
-        print(term)
-
-        return HttpResponseRedirect('home', term)
 
 
+# Sends all clients created by user to view
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'page/home.html'
@@ -48,26 +43,18 @@ class ClientListView(LoginRequiredMixin, ListView):
         }
         return context
 
-    def post(self, request):
-        if request.method == 'POST':
-            term = request.POST.get('search')
-            print(term)
-            context = {
-                'term': term,
-            }
-            print(context)
-
-            return HttpResponseRedirect('', context)
 
 
 class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
     template_name = 'page/client.html'
+
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
+        # Call the base implementation first to get context
         context = super().get_context_data(**kwargs)
         client = self.get_object()
-        # Add in a QuerySet of all the books
+
+        # Add in a QuerySet of all the videos filtered by client_id
         context['videos'] = Video.objects.filter(client_id=client)
         return context
 
@@ -75,28 +62,31 @@ class ClientDetailView(LoginRequiredMixin, DetailView):
 class ClientVideoView(LoginRequiredMixin, DetailView):
     model = Client
     template_name = 'page/video_modal.html'
-    def get_context_data(self, *args, **kwargs):
 
-        video_pk = self.kwargs.get('video_pk', None)
+    def get_context_data(self, *args, **kwargs):
 
         context = super().get_context_data(*args, **kwargs)
 
         client = self.get_object()
+        video_pk = self.kwargs.get('video_pk', None)
         context['video'] = Video.objects.get(client_id=client, id=video_pk)
+
         return context
 
 
 class ClientPoseVideoView(LoginRequiredMixin, DetailView):
     model = Client
     template_name = 'page/pose_video_modal.html'
-    def get_context_data(self, *args, **kwargs):
 
-        video_pk = self.kwargs.get('video_pk', None)
+    def get_context_data(self, *args, **kwargs):
 
         context = super().get_context_data(*args, **kwargs)
 
         client = self.get_object()
+        video_pk = self.kwargs.get('video_pk', None)
+
         context['video'] = Video.objects.get(client_id=client, id=video_pk)
+
         return context
 
 
@@ -138,7 +128,7 @@ class ClientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        form.instance.client_id = self.request.user
+        form.instance.user_id = self.request.user
         return super().form_valid(form)
 
     def test_func(self):
@@ -153,7 +143,6 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
     success_url = '/'
     template_name = 'page/delete_client.html'
     context_object_name = 'clients'
-    # ordering = ['creation_date']
 
     def test_func(self):
         client = self.get_object()
@@ -214,16 +203,6 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
         }
 
         return HttpResponseRedirect(reverse('client', kwargs={'pk': pk}), context)
-
-
-
-class VideoDeleteView(LoginRequiredMixin, DeleteView):
-    context = {
-        'clients': Client.objects.all()
-    }
-    model = Video
-    success_url = reverse_lazy('client', context)
-    template_name = 'delete_video.html'
 
 
 def pdf_view(request, *args, **kwargs):
