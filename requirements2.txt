@@ -1,0 +1,8 @@
+react-router-dom
+@material-ui/core
+webpack webpack-cli --save-dev
+@babel/core babel-loader @babel/preset-env @babel/preset-react --save-dev
+@babel/plugin-proposal-class-properties
+react-router-dom
+@material-ui/icons
+bootstrap-icons
