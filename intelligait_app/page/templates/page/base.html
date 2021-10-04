@@ -591,7 +591,9 @@
                 </a>
                 
                 {% if user.is_authenticated %}  <!-- (Chris) i.e. are you logged in? -->
-                    <div class="navbar-nav mr-auto"></div>
+                    <div class="navbar-nav mr-auto">
+                        
+                    </div>
                         <!-- Navbar Right Side -->
                         <div class="dropdown ms-auto">
                             <div class=" btn-group">
@@ -607,6 +609,10 @@
                                 <ul class="dropdown-menu custom_dropdown_menu" style="left:none;" aria-labelledby="dropdownMenuButton">
                                     <li><a class="dropdown-item custom_list_item" href="{% url 'profile' %}">Profile</a></li>
                                     <hr class="dropdown-divider m-0 mt-1 mb-1">
+                                    {% if user.is_superuser%}
+                                        <li><a class="dropdown-item custom_list_item" href="/admin">Admin</a></li>
+                                        <hr class="dropdown-divider m-0 mt-1 mb-1">
+                                    {% endif %}
                                     <li><a class="dropdown-item custom_list_item" href="{% url 'logout' %}">Logout</a></li>
                                 </ul>
                             </div>
