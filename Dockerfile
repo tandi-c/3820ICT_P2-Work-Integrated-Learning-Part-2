@@ -12,12 +12,7 @@ RUN pip install --upgrade pip setuptools wheel
 RUN pip install -r /requirements.txt
 RUN python3 -m pip install --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.12.0-py3-none-any.whl
 
-
 RUN apk del .tmp
-# COPY ./requirements2.txt /requirements2.txt
-# RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers gfortran
-# RUN npm install -r /requirements2.txt
-# RUN apk del .tmp
 
 RUN mkdir /intelligait_app
 COPY ./intelligait_app /intelligait_app
