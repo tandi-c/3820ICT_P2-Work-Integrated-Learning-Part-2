@@ -5,7 +5,7 @@ Intelligait is a web application for the analysis of a persons gait. It uses Ten
 
 ## Install Dependencies
 
-Must have python, pip and swig installed.
+Must have python and swig installed.
 
 Then run the following command:
 `pip install -r requirements.txt`
