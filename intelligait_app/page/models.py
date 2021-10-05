@@ -4,15 +4,11 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from .validators import file_size
 
-# Create your models here.
 
-TITLES = (
-    ('Mr', 'Mr'),
-    ('Mrs', 'Mrs'),
-    ('Miss', 'Miss'),
-    ('Ms', 'Ms'),
-)
 
+# Client model with User foreign key
+# Each client is associated with a User
+# One-to-many relationship
 class Client(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -36,6 +32,10 @@ class Client(models.Model):
         return reverse('client', kwargs={'pk': self.pk})
 
 
+
+# Video model with Client foreign key
+# Each video is associated with a Client
+# One-to-many relationship
 class Video(models.Model):
     client_id = models.ForeignKey(Client, default=None, on_delete=models.CASCADE, blank=True)
     title = models.CharField(max_length=500)

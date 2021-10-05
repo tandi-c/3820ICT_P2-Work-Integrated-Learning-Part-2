@@ -7,6 +7,8 @@ from .views import (
 )
 from . import views
 
+
+# Url patterns for page module
 urlpatterns = [
     path('', ClientListView.as_view(), name='page-home'),
     path('client/<int:pk>', ClientDetailView.as_view(), name='client'),
