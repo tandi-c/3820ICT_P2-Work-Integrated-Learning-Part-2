@@ -91,6 +91,7 @@
                             <td data-href="{% url 'pdf-view' client.id video.analysis_title %}"><small>{{ video.analysis_title }}</small></td>
                             <!-- Date -->
                             <td><small>{{ video.date_uploaded }}</small></td>
+                            <td></td>
 
                             <!-- Edit Button -->
                             {% comment %} <td><a class="btn btn-light btn-sm float-right float-shrink align-self-center" href="{% url 'delete-video' client.id video.id %}"><i class="bi bi-pencil-square"></i></a></td> {% endcomment %}

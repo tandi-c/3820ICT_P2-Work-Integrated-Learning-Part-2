@@ -2,6 +2,7 @@ import logging
 import time
 import tf_pose_estimation.DATA as DATA
 import math
+import os
 
 import cv2
 
@@ -120,8 +121,10 @@ def run(video_file = None):
     height = image.shape[0]
     logger.info("cam image=%dx%d" % (height, width))
 
+    output_video_temp = DATA.video_file[:-4] + "_pose_estimation_temp.mp4"
     output_video = DATA.video_file[:-4] + "_pose_estimation.mp4"
-    vid_writer = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc(*"avc1"), 10, (width, height))
+    vid_writer = cv2.VideoWriter(output_video_temp, cv2.VideoWriter_fourcc(*'mp4v'), 10, (width, height))
+    # vid_writer = cv2.VideoWriter(output_video, cv2.VideoWriter_fourcc('M','J','P','G'), 10, (width, height))
     frameRate = 0
 
     while True:
@@ -142,38 +145,8 @@ def run(video_file = None):
 
             human = humans[0]
 
-            # a = human.body_parts[1]
-            # x = a.x*image.shape[1]
-            # y = a.y*image.shape[0]
-            # chest = (int(x), int(y))
-
-            # a = human.body_parts[8]
-            # x = a.x*image.shape[1]
-            # y = a.y*image.shape[0]
-            # hip = (int(x), int(y))
-
-            # distance = int(math.sqrt( ((int(chest[0])-int(hip[0]))**2)+((int(chest[1])-int(hip[1]))**2) ))
-            # distances.append(distance);
-            # if (len(distances) > 15):
-            #     distances.pop(0)
-            # normDist = int(sum(distances) / len(distances))
-            # DATA.pointsDict["Distance"].append(normDist)
-
-            # start_point = (int(chest[0] - 1.5*(normDist)), int(chest[1] - 1.5*(normDist))) 
-            # end_point = (int(hip[0] + 1.5*(normDist)), int(hip[1] + 2.5*(normDist))) 
-
-            # image = draw_box(image, start_point, end_point)
-            # image = fit_person(image, start_point, end_point)
-
-            # humans = e.inference(
-            #     image,
-            #     resize_to_default=(w > 0 and h > 0),
-            #     upsample_size=args["resize_out_ratio"],
-            # )
-
             image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
             
-            # human = humans[0]
             for i in range(14):
                 try: 
                     a = human.body_parts[i]
@@ -192,11 +165,13 @@ def run(video_file = None):
                 (0, 255, 0),
                 2,
             )
-            cv2.imshow("tf-pose-estimation result", image)
+            # cv2.imshow("tf-pose-estimation result", image)
             fps_time = time.time()
             vid_writer.write(image)
             if cv2.waitKey(1) == 27:
                 break
     vid_writer.release()
+    os.system("ffmpeg -i {} -vcodec libx264 {}".format(output_video_temp, output_video))
+    os.remove(output_video_temp)
     cv2.destroyAllWindows()
     return DATA.pointsDict

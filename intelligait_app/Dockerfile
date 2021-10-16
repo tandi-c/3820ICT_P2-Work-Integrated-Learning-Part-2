@@ -1,32 +1,40 @@
-FROM python:3.9-alpine
+FROM python:3.8.5
 
-ENV PATH="/scripts:${PATH}"
+RUN mkdir /intelligait
+WORKDIR /intelligait
 
-COPY ./requirements.txt /requirements.txt
-RUN apk add build-base
-RUN apk add --update --no-cache --virtual .tmp gcc g++ libstdc++ musl-dev lapack-dev freetype-dev python3-dev libc-dev linux-headers gfortran
-RUN apk add git
-RUN apk add py3-scipy
+ENV PATH=":${PATH}"
+
+COPY requirements.txt .
+
+RUN apt-get update ##[edited]
+RUN apt-get install ffmpeg libsm6 libxext6  -y
+RUN apt-get update && apt-get install -y swig vim
+# RUN apt-get install --reinstall libxcb-xinerama0
+# RUN apt-get -y install openjdk-7-jre qtcreator build-essential
+# RUN apt-get install qt5-default
+RUN apt-get install -y libdbus-1-3 libxkbcommon-x11-0 libxcb-icccm4 \
+    libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 \
+    libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
+
+
 RUN pip3 install --upgrade -i https://mirrors.aliyun.com/pypi/simple pip
 RUN pip install --upgrade pip setuptools wheel
-RUN pip install -r /requirements.txt
-RUN python3 -m pip install --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.12.0-py3-none-any.whl
+RUN pip install -r requirements.txt
 
-RUN apk del .tmp
+COPY . .
 
-RUN mkdir /intelligait_app
-COPY ./intelligait_app /intelligait_app
-WORKDIR /intelligait_app
-COPY ./scripts /scripts
+WORKDIR /intelligait/tf_pose_estimation/tf_pose/pafprocess
+RUN swig -python -c++ pafprocess.i && python setup.py build_ext --inplace
 
-RUN chmod +x /scripts/*
+WORKDIR /intelligait
 
-RUN mkdir -p /vol/web/media
-RUN mkdir -p /vol/web/static
+EXPOSE 8000
 
-RUN adduser -D user
-RUN chown -R user:user /vol
-RUN chmod -R 755 /vol/web
-USER user
+# ENTRYPOINT  ["python", "manage.py"]
+
+
+ADD entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
 CMD ["entrypoint.sh"]

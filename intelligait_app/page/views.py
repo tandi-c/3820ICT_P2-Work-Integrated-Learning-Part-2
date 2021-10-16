@@ -226,10 +226,9 @@ class ClientUploadView(LoginRequiredMixin, DetailView):
             video.analysis = pdf_path
             video.analysis_title = title + ".pdf"
             skeleton_video_path = str(video).split('.', 1)
-            skeleton_video_path = str(skeleton_video_path[0]).split('\\')
-            skeleton_video_path1 = "videos/" + skeleton_video_path[-1] 
-            video.skeleton_video = skeleton_video_path1 + "_pose_estimation.mp4"
-
+            skeleton_video_path = str(skeleton_video_path[0]).split('/')
+            video.skeleton_video = "videos/" + skeleton_video_path[-1] + "_pose_estimation.mp4"
+            
             # Save video
             video.save(force_update=True)
 
