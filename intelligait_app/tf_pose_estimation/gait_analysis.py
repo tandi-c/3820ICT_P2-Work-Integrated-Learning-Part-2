@@ -49,10 +49,10 @@ def addLegends(leftData, rightData, keyword):       # add legend and standard de
         plt.legend([lines[i] for i in [0, 1]], ['Left Side has more variance and less stability.' + ' Standard Deviation is: ' + "{:.2f}".format(leftVar), 'Right Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(rightVar)], loc=3)
         plt.gca().add_artist(legend1)
     elif rightVar > (leftVar * 1.5):
-        plt.legend([lines[i] for i in [0, 1]], ['Right Side has more variance and less stability.' + ' Standard Deviation is: ' + "{:.2f}".format(rightVar), 'Left Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(leftVar)], loc=3)
+        plt.legend([lines[i] for i in [0, 1]], ['Left Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(leftVar), 'Right Side has more variance and less stability.' + ' Standard Deviation is: ' + "{:.2f}".format(rightVar)], loc=3)
         plt.gca().add_artist(legend1)
     else:
-        plt.legend([lines[i] for i in [0, 1]], ['Right Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(rightVar), 'Left Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(leftVar)], loc=3)
+        plt.legend([lines[i] for i in [0, 1]], ['Left Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(leftVar), 'Right Side is normal.' + ' Standard Deviation is: ' + "{:.2f}".format(rightVar)], loc=3)
         plt.gca().add_artist(legend1)
 
 
