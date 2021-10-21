@@ -18,3 +18,8 @@ Then run the following command:
 
 Download graph_opt.pb from http://www.mediafire.com/file/qlzzr20mpocnpa3/graph_opt.pb and place in `\tf_pose_estimation\models\graph\cmu`
 
+### To Run Application
+
+You must be in the 'intelligait_app' directory, then run the following command:
+'python manage.py runserver'
+Then open your browser at '127.0.0.0:8000'
